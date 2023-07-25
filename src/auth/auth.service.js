@@ -60,7 +60,6 @@ const signup = async (payload) => {
             name
             username
             email
-            role
             address {
               mainAddress
               city

@@ -9,7 +9,6 @@ const Signup = () => {
   const [age, setAge] = useState("");
   const [countryCode, setCountryCode] = useState("");
   const [mobileNumber, setMobileNumber] = useState("");
-  const [role, setRole] = useState("");
   const [mainAddress, setMainAddress] = useState("");
   const [city, setCity] = useState("");
   const [pincode, setPincode] = useState("");
@@ -35,7 +34,6 @@ const Signup = () => {
         age,
         countryCode,
         mobileNumber,
-        role,
         mainAddress,
         city,
         pincode,
