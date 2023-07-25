@@ -6,6 +6,13 @@ const Signup = () => {
   const [password, setPassword] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(true);
   const [isPasswordValid, setIsPasswordValid] = useState(true);
+  const [age, setAge] = useState("");
+  const [countryCode, setCountryCode] = useState("");
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [role, setRole] = useState("");
+  const [mainAddress, setMainAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [pincode, setPincode] = useState("");
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -18,7 +25,18 @@ const Signup = () => {
     }
 
     try {
-      await AuthService.signup(email, password).then(
+      const data= {  
+        email,
+        password,
+        age,
+        countryCode,
+        mobileNumber,
+        role,
+        mainAddress,
+        city,
+        pincode
+     }
+      await AuthService.signup(data).then(
         (response) => {
           console.log("Signup successful!");
         },
@@ -69,6 +87,105 @@ const Signup = () => {
               Password must be at least 8 characters long
             </div>
           )}
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="age" className="form-label">
+            Age
+          </label>
+          <input
+            type="number"
+            id="age"
+            className="form-control"
+            placeholder="Enter age"
+            value={age}
+            onChange={(e) => setAge(e.target.value)}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="countryCode" className="form-label">
+            Country code
+          </label>
+          <input
+            type="text"
+            id="countryCode"
+            className="form-control"
+            placeholder="Enter country code"
+            value={countryCode}
+            onChange={(e) => setCountryCode(e.target.value)}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="mobileNumber" className="form-label">
+            Mobile number
+          </label>
+          <input
+            type="text"
+            id="mobileNumber"
+            className="form-control"
+            placeholder="Enter mobile number"
+            value={mobileNumber}
+            onChange={(e) => setMobileNumber(e.target.value)}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="role" className="form-label">
+            Role
+          </label>
+          <select
+            id="role"
+            className="form-select"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+          >
+            <option value="user">user</option>
+            <option value="admin">admin</option>
+          </select>
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="mainAddress" className="form-label">
+            Main address
+          </label>
+          <input
+            type="text"
+            id="mainAddress"
+            className="form-control"
+            placeholder="Enter main address"
+            value={mainAddress}
+            onChange={(e) => setMainAddress(e.target.value)}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="city" className="form-label">
+            City
+          </label>
+          <input
+            type="text"
+            id="city"
+            className="form-control"
+            placeholder="Enter city"
+            value={city}
+            onChange={(e) => setCity(e.target.value)}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="pincode" className="form-label">
+            Pincode
+          </label>
+          <input
+            type="text"
+            id="pincode"
+            className="form-control"
+            placeholder="Enter pincode"
+            value={pincode}
+            onChange={(e) => setPincode(e.target.value)}
+          />
         </div>
 
         <button type="submit" className="btn btn-warning">

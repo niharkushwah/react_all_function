@@ -20,17 +20,50 @@ export const login = (email, password) => {
     });
 };
 
-const signup = (email, password) => {
+const signup = async (payload) => {
+  console.log(payload,"payload");
+  const {
+    name,
+    username,
+    age,
+    mobileNumber,
+    countryCode,
+    mainAddress,
+    city,
+    pincode,
+    email,
+    password,
+  } = payload;
+
+  // console.log('AGE ---------------> ', age, mobileNumber, city)
+
   return axios
-    .post(API_URL + "/graphql", {
+    .post(API_URL, {
       query: `
         mutation {
-          createUser(payload: {
-            email: "${email}",
-            password: "${password}"
-          }) {
+          createUser(
+            payload: {
+              age: ${age},
+              mobileNumber: ${mobileNumber},
+              countryCode: "${countryCode}",
+              email: "${email}",
+              password: "${password}",
+              address: {
+                mainAddress: "${mainAddress}",
+                city: "${city}",
+                pincode: ${pincode},
+              },
+            }
+          ) {
+            username
             email
-            password
+            role
+            address {
+              mainAddress
+              city
+              pincode
+            }
+            age
           }
         }
       `,
@@ -42,7 +75,6 @@ const signup = (email, password) => {
       return response.data;
     });
 };
-
 
 export const fetchUsers = async (role, minAge, maxAge) => {
   try {
