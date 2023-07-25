@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import AuthService from "../auth/auth.service";
+import EmailValidator from "email-validator";
+import passwordValidator from "password-validator";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -17,9 +19,12 @@ const Signup = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    setIsEmailValid(emailRegex.test(email));
-    setIsPasswordValid(password.length >= 8);
+    // const emailRegex = /^[^\s@]+@c[^\s@]+\.[^\s@]+$/;
+    setIsEmailValid(EmailValidator.validate(email));
+
+    const schema = new passwordValidator();
+    schema.is().min(8);
+    setIsPasswordValid(schema.validate(password));
 
     if (!isEmailValid || !isPasswordValid) {
       return;
@@ -60,7 +65,7 @@ const Signup = () => {
             Email
           </label>
           <input
-            type="text"
+            type="email"
             id="email"
             className={`form-control ${!isEmailValid ? "is-invalid" : ""}`}
             placeholder="Enter email"
