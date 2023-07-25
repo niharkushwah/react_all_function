@@ -43,6 +43,8 @@ const signup = async (payload) => {
         mutation {
           createUser(
             payload: {
+              name: "${name}",
+              username: "${username}",
               age: ${age},
               mobileNumber: ${mobileNumber},
               countryCode: "${countryCode}",
@@ -55,6 +57,7 @@ const signup = async (payload) => {
               },
             }
           ) {
+            name
             username
             email
             role

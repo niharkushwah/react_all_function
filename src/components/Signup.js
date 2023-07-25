@@ -13,6 +13,8 @@ const Signup = () => {
   const [mainAddress, setMainAddress] = useState("");
   const [city, setCity] = useState("");
   const [pincode, setPincode] = useState("");
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -25,7 +27,9 @@ const Signup = () => {
     }
 
     try {
-      const data= {  
+      const data = {
+        name,
+        username,
         email,
         password,
         age,
@@ -34,8 +38,8 @@ const Signup = () => {
         role,
         mainAddress,
         city,
-        pincode
-     }
+        pincode,
+      };
       await AuthService.signup(data).then(
         (response) => {
           console.log("Signup successful!");
@@ -68,6 +72,34 @@ const Signup = () => {
           {!isEmailValid && (
             <div className="invalid-feedback">Invalid email format</div>
           )}
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="name" className="form-label">
+            Name
+          </label>
+          <input
+            type="text"
+            id="name"
+            className="form-control"
+            placeholder="Enter name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="username" className="form-label">
+            Username
+          </label>
+          <input
+            type="text"
+            id="username"
+            className="form-control"
+            placeholder="Enter username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+          />
         </div>
 
         <div className="mb-3">
@@ -129,21 +161,6 @@ const Signup = () => {
             value={mobileNumber}
             onChange={(e) => setMobileNumber(e.target.value)}
           />
-        </div>
-
-        <div className="mb-3">
-          <label htmlFor="role" className="form-label">
-            Role
-          </label>
-          <select
-            id="role"
-            className="form-select"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-          >
-            <option value="user">user</option>
-            <option value="admin">admin</option>
-          </select>
         </div>
 
         <div className="mb-3">
