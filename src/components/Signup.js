@@ -4,6 +4,7 @@ import EmailValidator from "email-validator";
 import countryList from "react-select-country-list";
 import Select from "react-select";
 import { useNavigate } from "react-router-dom";
+import { checkEmail } from "../auth/auth.service";
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -19,6 +20,8 @@ const Signup = () => {
     username: "",
     selectedCountry: null,
   });
+
+  const [isUserRegistered, setIsUserRegistered] = useState(false);
 
   const [formErrors, setFormErrors] = useState({
     email: "",
@@ -117,6 +120,13 @@ const Signup = () => {
         city,
         pincode,
       };
+
+      const userExists = await checkEmail(formData.email);
+      if (userExists) {
+        setIsUserRegistered(true);
+        return;
+      }
+
       await AuthService.signup(data).then(
         (response) => {
           navigate("/login");
@@ -356,6 +366,12 @@ const Signup = () => {
         <button type="submit" className="btn btn-warning">
           Sign up
         </button>
+
+        {isUserRegistered && (
+          <div className="alert alert-danger mt-3" role="alert">
+            Email already exists. Please use a different email.
+          </div>
+        )}
       </form>
     </div>
   );

@@ -14,31 +14,31 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-  
+
     if (!EmailValidator.validate(email)) {
       setError("Invalid email format.");
       return;
     }
-  
+
     try {
       const emailData = await checkEmail(email);
       if (!emailData) {
         setError("Email does not exist.");
         return;
       }
-  
+
       const response = await AuthService.login(email, password);
       const { data } = response;
       if (data && data.login) {
         navigate("/userlist");
       } else {
-        setError("Invalid Password");
+        setError("Invalid password");
       }
     } catch (err) {
-      setError(err.message);
+      console.log(err);
+      setError("Failed to check email");
     }
   };
-  
 
   return (
     <Container>
