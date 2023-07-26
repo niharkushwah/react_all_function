@@ -1,32 +1,106 @@
 import React, { useState } from "react";
 import AuthService from "../auth/auth.service";
 import EmailValidator from "email-validator";
-import passwordValidator from "password-validator";
+import countryList from "react-select-country-list";
+import Select from "react-select";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isEmailValid, setIsEmailValid] = useState(true);
-  const [isPasswordValid, setIsPasswordValid] = useState(true);
-  const [age, setAge] = useState("");
-  const [countryCode, setCountryCode] = useState("");
-  const [mobileNumber, setMobileNumber] = useState("");
-  const [mainAddress, setMainAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [pincode, setPincode] = useState("");
-  const [name, setName] = useState("");
-  const [username, setUsername] = useState("");
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+    age: "",
+    mobileNumber: "",
+    mainAddress: "",
+    city: "",
+    pincode: "",
+    name: "",
+    username: "",
+    selectedCountry: null,
+  });
+
+  const [formErrors, setFormErrors] = useState({
+    email: "",
+    password: "",
+    confirmPassword: "",
+    age: "",
+    mobileNumber: "",
+    mainAddress: "",
+    city: "",
+    pincode: "",
+    name: "",
+    username: "",
+    countryCode: "",
+  });
+
+  const navigate = useNavigate();
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleCountryCodeChange = (selectedOption) => {
+    setFormData({
+      ...formData,
+      selectedCountry: selectedOption,
+    });
+  };
 
   const handleSignup = async (e) => {
     e.preventDefault();
-    // const emailRegex = /^[^\s@]+@c[^\s@]+\.[^\s@]+$/;
-    setIsEmailValid(EmailValidator.validate(email));
+    const {
+      email,
+      password,
+      confirmPassword,
+      age,
+      mobileNumber,
+      mainAddress,
+      city,
+      pincode,
+      name,
+      username,
+      selectedCountry,
+    } = formData;
 
-    const schema = new passwordValidator();
-    schema.is().min(8);
-    setIsPasswordValid(schema.validate(password));
+    setFormErrors({
+      email: !email
+        ? "Email is required."
+        : EmailValidator.validate(email)
+        ? ""
+        : "Invalid email format.",
+      password:
+        password.length < 8
+          ? "Password must be at least 8 characters long."
+          : "",
+      confirmPassword:
+        password !== confirmPassword ? "Passwords do not match." : "",
+      age:
+        isNaN(parseInt(age)) ||
+        parseInt(age) <= 0 ||
+        parseInt(age) <= 15 ||
+        parseInt(age) >= 99
+          ? "Age should be a positive number and should be between 18 and 99."
+          : "",
+      mobileNumber:
+        mobileNumber.length !== 10 ? "Mobile number should be 10 digits." : "",
+      mainAddress: !mainAddress ? "Main address is required." : "",
+      city: !city ? "City is required." : "",
+      pincode: !pincode.match(/^\d{6}$/)
+        ? "Pincode should be a 6-digit number."
+        : "",
+      name: !name ? "Name is required." : "",
+      username: !username ? "Username is required." : "",
+      countryCode: selectedCountry ? "" : "Country code is required.",
+    });
 
-    if (!isEmailValid || !isPasswordValid) {
+    const hasErrors = Object.values(formErrors).some((error) => error !== "");
+
+    if (hasErrors) {
       return;
     }
 
@@ -37,7 +111,7 @@ const Signup = () => {
         email,
         password,
         age,
-        countryCode,
+        countryCode: selectedCountry ? selectedCountry.value : "",
         mobileNumber,
         mainAddress,
         city,
@@ -45,6 +119,7 @@ const Signup = () => {
       };
       await AuthService.signup(data).then(
         (response) => {
+          navigate("/login");
           console.log("Signup successful!");
         },
         (error) => {
@@ -56,9 +131,17 @@ const Signup = () => {
     }
   };
 
+  const options = countryList().getData();
+  const countrySelectStyles = {
+    control: (provided) => ({
+      ...provided,
+      borderRadius: "4px",
+    }),
+  };
+
   return (
     <div className="container mt-5">
-      <form onSubmit={handleSignup}>
+      <form onSubmit={handleSignup} noValidate>
         <h3>Sign up</h3>
         <div className="mb-3">
           <label htmlFor="email" className="form-label">
@@ -67,13 +150,15 @@ const Signup = () => {
           <input
             type="email"
             id="email"
-            className={`form-control ${!isEmailValid ? "is-invalid" : ""}`}
+            className={`form-control ${formErrors.email ? "is-invalid" : ""}`}
             placeholder="Enter email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            name="email"
+            value={formData.email}
+            onChange={handleInputChange}
+            required
           />
-          {!isEmailValid && (
-            <div className="invalid-feedback">Invalid email format</div>
+          {formErrors.email && (
+            <div className="invalid-feedback">{formErrors.email}</div>
           )}
         </div>
 
@@ -84,11 +169,16 @@ const Signup = () => {
           <input
             type="text"
             id="name"
-            className="form-control"
+            className={`form-control ${formErrors.name ? "is-invalid" : ""}`}
             placeholder="Enter name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            name="name"
+            value={formData.name}
+            onChange={handleInputChange}
+            required
           />
+          {formErrors.name && (
+            <div className="invalid-feedback">{formErrors.name}</div>
+          )}
         </div>
 
         <div className="mb-3">
@@ -98,11 +188,18 @@ const Signup = () => {
           <input
             type="text"
             id="username"
-            className="form-control"
+            className={`form-control ${
+              formErrors.username ? "is-invalid" : ""
+            }`}
             placeholder="Enter username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            name="username"
+            value={formData.username}
+            onChange={handleInputChange}
+            required
           />
+          {formErrors.username && (
+            <div className="invalid-feedback">{formErrors.username}</div>
+          )}
         </div>
 
         <div className="mb-3">
@@ -112,15 +209,38 @@ const Signup = () => {
           <input
             type="password"
             id="password"
-            className={`form-control ${!isPasswordValid ? "is-invalid" : ""}`}
+            className={`form-control ${
+              formErrors.password ? "is-invalid" : ""
+            }`}
             placeholder="Enter password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            name="password"
+            value={formData.password}
+            onChange={handleInputChange}
+            required
           />
-          {!isPasswordValid && (
-            <div className="invalid-feedback">
-              Password must be at least 8 characters long
-            </div>
+          {formErrors.password && (
+            <div className="invalid-feedback">{formErrors.password}</div>
+          )}
+        </div>
+
+        <div className="mb-3">
+          <label htmlFor="confirmPassword" className="form-label">
+            Confirm Password
+          </label>
+          <input
+            type="password"
+            id="confirmPassword"
+            className={`form-control ${
+              formErrors.confirmPassword ? "is-invalid" : ""
+            }`}
+            placeholder="Confirm password"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleInputChange}
+            required
+          />
+          {formErrors.confirmPassword && (
+            <div className="invalid-feedback">{formErrors.confirmPassword}</div>
           )}
         </div>
 
@@ -131,39 +251,47 @@ const Signup = () => {
           <input
             type="number"
             id="age"
-            className="form-control"
+            className={`form-control ${formErrors.age ? "is-invalid" : ""}`}
             placeholder="Enter age"
-            value={age}
-            onChange={(e) => setAge(e.target.value)}
+            name="age"
+            value={formData.age}
+            onChange={handleInputChange}
+            required
           />
-        </div>
-
-        <div className="mb-3">
-          <label htmlFor="countryCode" className="form-label">
-            Country code
-          </label>
-          <input
-            type="text"
-            id="countryCode"
-            className="form-control"
-            placeholder="Enter country code"
-            value={countryCode}
-            onChange={(e) => setCountryCode(e.target.value)}
-          />
+          {formErrors.age && (
+            <div className="invalid-feedback">{formErrors.age}</div>
+          )}
         </div>
 
         <div className="mb-3">
           <label htmlFor="mobileNumber" className="form-label">
             Mobile number
           </label>
-          <input
-            type="text"
-            id="mobileNumber"
-            className="form-control"
-            placeholder="Enter mobile number"
-            value={mobileNumber}
-            onChange={(e) => setMobileNumber(e.target.value)}
-          />
+          <div className="input-group">
+            <div className="input-group-prepend">
+              <Select
+                options={options}
+                value={formData.selectedCountry}
+                onChange={handleCountryCodeChange}
+                styles={countrySelectStyles}
+              />
+            </div>
+            <input
+              type="text"
+              id="mobileNumber"
+              className={`form-control ${
+                formErrors.mobileNumber ? "is-invalid" : ""
+              }`}
+              placeholder="Enter mobile number"
+              name="mobileNumber"
+              value={formData.mobileNumber}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          {formErrors.mobileNumber && (
+            <div className="invalid-feedback">{formErrors.mobileNumber}</div>
+          )}
         </div>
 
         <div className="mb-3">
@@ -173,11 +301,18 @@ const Signup = () => {
           <input
             type="text"
             id="mainAddress"
-            className="form-control"
+            className={`form-control ${
+              formErrors.mainAddress ? "is-invalid" : ""
+            }`}
             placeholder="Enter main address"
-            value={mainAddress}
-            onChange={(e) => setMainAddress(e.target.value)}
+            name="mainAddress"
+            value={formData.mainAddress}
+            onChange={handleInputChange}
+            required
           />
+          {formErrors.mainAddress && (
+            <div className="invalid-feedback">{formErrors.mainAddress}</div>
+          )}
         </div>
 
         <div className="mb-3">
@@ -187,11 +322,16 @@ const Signup = () => {
           <input
             type="text"
             id="city"
-            className="form-control"
+            className={`form-control ${formErrors.city ? "is-invalid" : ""}`}
             placeholder="Enter city"
-            value={city}
-            onChange={(e) => setCity(e.target.value)}
+            name="city"
+            value={formData.city}
+            onChange={handleInputChange}
+            required
           />
+          {formErrors.city && (
+            <div className="invalid-feedback">{formErrors.city}</div>
+          )}
         </div>
 
         <div className="mb-3">
@@ -201,11 +341,16 @@ const Signup = () => {
           <input
             type="text"
             id="pincode"
-            className="form-control"
+            className={`form-control ${formErrors.pincode ? "is-invalid" : ""}`}
             placeholder="Enter pincode"
-            value={pincode}
-            onChange={(e) => setPincode(e.target.value)}
+            name="pincode"
+            value={formData.pincode}
+            onChange={handleInputChange}
+            required
           />
+          {formErrors.pincode && (
+            <div className="invalid-feedback">{formErrors.pincode}</div>
+          )}
         </div>
 
         <button type="submit" className="btn btn-warning">

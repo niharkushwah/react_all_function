@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import AuthService from "../auth/auth.service";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -6,13 +7,19 @@ import "bootstrap/dist/css/bootstrap.min.css";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await AuthService.login(email, password).then((error) => {
-        console.log(error);
-      });
+      const response = await AuthService.login(email, password);
+      const { data } = response;
+      if (data && data.login) {
+        navigate("/userlist");
+      } else {
+        setError("Invalid email or password");
+      }
     } catch (err) {
       console.log(err);
     }
@@ -47,6 +54,7 @@ const Login = () => {
             <Button type="submit" className="btn btn-success mt-3">
               Log in
             </Button>
+            {error && <p className="text-danger mt-3">{error}</p>}
           </Form>
         </Col>
       </Row>
