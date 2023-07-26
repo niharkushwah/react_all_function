@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import AuthService from "../auth/auth.service";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import EmailValidator from "email-validator";
+import { checkEmail } from "../auth/auth.service";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -12,18 +14,31 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
+  
+    if (!EmailValidator.validate(email)) {
+      setError("Invalid email format.");
+      return;
+    }
+  
     try {
+      const emailData = await checkEmail(email);
+      if (!emailData) {
+        setError("Email does not exist.");
+        return;
+      }
+  
       const response = await AuthService.login(email, password);
       const { data } = response;
       if (data && data.login) {
         navigate("/userlist");
       } else {
-        setError("Invalid email or password");
+        setError("Invalid Password");
       }
     } catch (err) {
-      console.log(err);
+      setError(err.message);
     }
   };
+  
 
   return (
     <Container>

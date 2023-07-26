@@ -150,10 +150,37 @@ export const updateUser = async (email, payload) => {
   }
 };
 
+// auth.js
+export const checkEmail = async (email) => {
+  try {
+    const response = await axios.post(API_URL, {
+      query: `
+        query {
+          findEmail(email: "${email}") {
+            email
+          }
+        }
+      `,
+    });
+
+    if (response.data.errors) {
+      throw new Error('Email not found in the database.');
+    }
+
+    return response.data.data.findEmail;
+  } catch (error) {
+    throw new Error('Email not found in the database.');
+  }
+};
+
+
+
+
 
 
 const AuthService = {
   signup,
+  checkEmail,
   login
 };
 
