@@ -1,23 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { fetchUsers } from '../auth/auth.service';
-import { Table, Modal, Form, Button } from 'react-bootstrap';
-import { updateUser } from '../auth/auth.service';
-import { deleteUser } from '../auth/auth.service';
+import React, { useEffect, useState } from "react";
+import { fetchUsers } from "../auth/auth.service";
+import { Table, Modal, Form, Button } from "react-bootstrap";
+import { updateUser } from "../auth/auth.service";
+import { deleteUser } from "../auth/auth.service";
 
 function UserList() {
   const [users, setUsers] = useState([]);
   const [showEditModal, setShowEditModal] = useState(false);
   const [selectedUser, setSelectedUser] = useState({});
-  const [updatedName, setUpdatedName] = useState('');
-  const [updatedAge, setUpdatedAge] = useState('');
-  const [updatedUsername, setUpdatedUsername] = useState('');
+  const [updatedName, setUpdatedName] = useState("");
+  const [updatedAge, setUpdatedAge] = useState("");
+  const [updatedUsername, setUpdatedUsername] = useState("");
 
   const handleCloseEditModal = () => {
     setShowEditModal(false);
     setSelectedUser({});
-    setUpdatedName('');
-    setUpdatedAge('');
-    setUpdatedUsername('');
+    setUpdatedName("");
+    setUpdatedAge("");
+    setUpdatedUsername("");
   };
 
   const handleShowEditModal = (user) => {
@@ -36,34 +36,33 @@ function UserList() {
         email: selectedUser.email,
         username: selectedUser.username,
       };
-    
+
       const updatedUser = await updateUser(selectedUser.email, payload);
       const updatedUsers = users.map((user) =>
         user._id === selectedUser._id ? { ...user, ...updatedUser } : user
       );
-
       setUsers(updatedUsers);
       handleCloseEditModal();
     } catch (error) {
-      console.error('Failed to update user:', error);
+      console.error("Failed to update user:", error);
     }
   };
 
   const handleDelete = async (userId) => {
     try {
       await deleteUser(userId);
-      fetchUsers('user', 18, 35)
+      fetchUsers("user", 18, 35)
         .then((data) => setUsers(data))
-        .catch((error) => console.error('Failed to fetch users:', error));
+        .catch((error) => console.error("Failed to fetch users:", error));
     } catch (error) {
-      console.error('Failed to delete user:', error);
+      console.error("Failed to delete user:", error);
     }
   };
 
   useEffect(() => {
-    fetchUsers('user', 18, 85)
+    fetchUsers("user", 18, 85)
       .then((data) => setUsers(data))
-      .catch((error) => console.error('Failed to fetch users:', error));
+      .catch((error) => console.error("Failed to fetch users:", error));
   }, []);
 
   return (
@@ -88,11 +87,22 @@ function UserList() {
               <td>{user.username}</td>
               <td>{user.age}</td>
               <td>
-                {user.address.mainAddress}, {user.address.city}, {user.address.pincode}
+                {user.address.mainAddress}, {user.address.city},{" "}
+                {user.address.pincode}
               </td>
               <td>
-                <button className='btn btn-warning me-2' onClick={() => handleShowEditModal(user)}>Update</button>
-                <button className='btn btn-danger ms-2' onClick={() => handleDelete(user._id)}>Delete</button>
+                <button
+                  className="btn btn-warning me-2"
+                  onClick={() => handleShowEditModal(user)}
+                >
+                  Update
+                </button>
+                <button
+                  className="btn btn-danger ms-2"
+                  onClick={() => handleDelete(user._id)}
+                >
+                  Delete
+                </button>
               </td>
             </tr>
           ))}
@@ -123,18 +133,17 @@ function UserList() {
           <Form.Group>
             <Form.Label>Username</Form.Label>
             <Form.Control
-                type="text"
-                value={updatedUsername}
-                onChange={(e) => setUpdatedUsername(e.target.value)}
+              type="text"
+              value={updatedUsername}
+              onChange={(e) => setUpdatedUsername(e.target.value)}
             />
-            </Form.Group>
-
+          </Form.Group>
         </Modal.Body>
         <Modal.Footer>
-          <Button className='btn btn-danger' onClick={handleCloseEditModal}>
+          <Button className="btn btn-danger" onClick={handleCloseEditModal}>
             Close
           </Button>
-          <Button className='btn btn-success' onClick={handleUpdate}>
+          <Button className="btn btn-success" onClick={handleUpdate}>
             Update
           </Button>
         </Modal.Footer>
@@ -142,5 +151,4 @@ function UserList() {
     </div>
   );
 }
-
 export default UserList;

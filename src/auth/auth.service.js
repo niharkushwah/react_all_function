@@ -1,7 +1,5 @@
-import axios from 'axios';
-
+import axios from "axios";
 const API_URL = "http://localhost:3000/graphql";
-
 
 export const login = (email, password) => {
   return axios
@@ -13,15 +11,12 @@ export const login = (email, password) => {
       `,
     })
     .then((response) => {
-      if (response.data.accessToken) {
-        localStorage.setItem("user", JSON.stringify(response.data));
-      }
       return response.data;
     });
 };
 
 const signup = async (payload) => {
-  console.log(payload,"payload");
+  console.log(payload, "payload");
   const {
     name,
     username,
@@ -34,8 +29,6 @@ const signup = async (payload) => {
     email,
     password,
   } = payload;
-
-  // console.log('AGE ---------------> ', age, mobileNumber, city)
 
   return axios
     .post(API_URL, {
@@ -101,7 +94,7 @@ export const fetchUsers = async (role, minAge, maxAge) => {
 
     return response.data.data.findAllUser;
   } catch (error) {
-    throw new Error('Failed to fetch users');
+    throw new Error("Failed to fetch users");
   }
 };
 
@@ -117,10 +110,9 @@ export const deleteUser = async (userId) => {
         }
       `,
     });
-
     return response.data.data.deleteUser;
   } catch (error) {
-    throw new Error('Failed to delete user');
+    throw new Error("Failed to delete user");
   }
 };
 
@@ -138,7 +130,6 @@ export const updateUser = async (email, payload) => {
             name
             age
             username
-           
           }
         }
       `,
@@ -146,7 +137,7 @@ export const updateUser = async (email, payload) => {
 
     return response.data.data.updateUser;
   } catch (error) {
-    throw new Error('Failed to update user');
+    throw new Error("Failed to update user");
   }
 };
 
@@ -161,26 +152,17 @@ export const checkEmail = async (email) => {
         }
       `,
     });
-
     if (response.data.errors) {
       return false;
     }
-
     return response.data.data.findEmail;
   } catch (error) {
-    throw new Error('Failed to check email');
+    throw new Error("Failed to check email");
   }
 };
-
-
-
-
-
-
 const AuthService = {
   signup,
   checkEmail,
-  login
+  login,
 };
-
 export default AuthService;
