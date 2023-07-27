@@ -129,7 +129,8 @@ const Signup = () => {
 
       await AuthService.signup(data).then(
         (response) => {
-          navigate("/login");
+          // console.log("Data to be passed to Login:", { email, password });
+          navigate("/login", { state: { userEmail: email, userPassword: password } });
           console.log("Signup successful!");
         },
         (error) => {
