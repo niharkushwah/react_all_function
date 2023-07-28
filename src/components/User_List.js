@@ -11,6 +11,8 @@ function UserList() {
   const [updatedName, setUpdatedName] = useState("");
   const [updatedAge, setUpdatedAge] = useState("");
   const [updatedUsername, setUpdatedUsername] = useState("");
+  const [ageError, setAgeError] = useState("");
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
 
   const handleCloseEditModal = () => {
     setShowEditModal(false);
@@ -18,6 +20,12 @@ function UserList() {
     setUpdatedName("");
     setUpdatedAge("");
     setUpdatedUsername("");
+    setAgeError("");
+  };
+
+  const handleCloseDeleteModal = () => {
+    setShowDeleteModal(false);
+    setSelectedUser({});
   };
 
   const handleShowEditModal = (user) => {
@@ -28,13 +36,30 @@ function UserList() {
     setShowEditModal(true);
   };
 
+  const handleShowDeleteModal = (user) => {
+    setSelectedUser(user);
+    setShowDeleteModal(true);
+  };
+
+  const handleDeleteConfirmed = () => {
+    handleDelete(selectedUser._id);
+    handleCloseDeleteModal();
+  };
+
   const handleUpdate = async () => {
     try {
+      setAgeError("");
+      const parsedAge = parseInt(updatedAge);
+      if (parsedAge < 18 || parsedAge > 99) {
+        setAgeError("Age must be between 18 and 99.");
+        return;
+      }
+
       const payload = {
         name: updatedName,
         age: parseInt(updatedAge),
         email: selectedUser.email,
-        username: selectedUser.username,
+        username: updatedUsername,
       };
 
       const updatedUser = await updateUser(selectedUser.email, payload);
@@ -99,7 +124,7 @@ function UserList() {
                 </button>
                 <button
                   className="btn btn-danger ms-2"
-                  onClick={() => handleDelete(user._id)}
+                  onClick={() => handleShowDeleteModal(user)}
                 >
                   Delete
                 </button>
@@ -129,6 +154,7 @@ function UserList() {
               value={updatedAge}
               onChange={(e) => setUpdatedAge(e.target.value)}
             />
+            {ageError && <p className="text-danger">{ageError}</p>}
           </Form.Group>
           <Form.Group>
             <Form.Label>Username</Form.Label>
@@ -146,6 +172,27 @@ function UserList() {
           <Button className="btn btn-success" onClick={handleUpdate}>
             Update
           </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Delete User</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Form.Group>
+            <Form.Label>Are you sure you want to delete this user?</Form.Label>
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Modal.Footer>
+            <Button className="btn btn-danger" onClick={handleCloseDeleteModal}>
+              Close
+            </Button>
+            <Button className="btn btn-success" onClick={handleDeleteConfirmed}>
+              Delete
+            </Button>
+          </Modal.Footer>
         </Modal.Footer>
       </Modal>
     </div>

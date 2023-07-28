@@ -70,6 +70,20 @@ const Signup = () => {
       selectedCountry,
     } = formData;
 
+    const requiredFields = [
+      "email",
+      "password",
+      "confirmPassword",
+      "age",
+      "mobileNumber",
+      "mainAddress",
+      "city",
+      "pincode",
+      "name",
+      "username",
+      "selectedCountry",
+    ];
+
     setFormErrors({
       email: !email
         ? "Email is required."
@@ -101,6 +115,13 @@ const Signup = () => {
       countryCode: selectedCountry ? "" : "Country code is required.",
     });
 
+    for (const field of requiredFields) {
+      if (!formData[field]) {
+        alert(`Please fill in the "${field}" field.`);
+        return;
+      }
+    }
+
     const hasErrors = Object.values(formErrors).some((error) => error !== "");
 
     if (hasErrors) {
@@ -130,7 +151,9 @@ const Signup = () => {
       await AuthService.signup(data).then(
         (response) => {
           // console.log("Data to be passed to Login:", { email, password });
-          navigate("/login", { state: { userEmail: email, userPassword: password } });
+          navigate("/login", {
+            state: { userEmail: email, userPassword: password },
+          });
           console.log("Signup successful!");
         },
         (error) => {
