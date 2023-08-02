@@ -3,6 +3,7 @@ import { fetchUsers } from "../auth/auth.service";
 import { Table, Modal, Form, Button } from "react-bootstrap";
 import { updateUser } from "../auth/auth.service";
 import { deleteUser } from "../auth/auth.service";
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 function UserList() {
   const [users, setUsers] = useState([]);
@@ -13,6 +14,13 @@ function UserList() {
   const [updatedUsername, setUpdatedUsername] = useState("");
   const [ageError, setAgeError] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
 
   const handleCloseEditModal = () => {
     setShowEditModal(false);
@@ -195,6 +203,12 @@ function UserList() {
           </Modal.Footer>
         </Modal.Footer>
       </Modal>
+
+      <div className="scroll-to-top position-absolute end-0">
+        <button className="btn btn-danger align-right" onClick={scrollToTop}>
+          <i class="bi bi-arrow-up-circle"></i> Scroll Up
+        </button>
+      </div>
     </div>
   );
 }
