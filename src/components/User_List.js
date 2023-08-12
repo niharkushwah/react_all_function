@@ -4,6 +4,7 @@ import { Table, Modal, Form, Button } from "react-bootstrap";
 import { updateUser } from "../auth/auth.service";
 import { deleteUser } from "../auth/auth.service";
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import { githubCodeExchange } from "../auth/auth.service";
 
 function UserList() {
   const [users, setUsers] = useState([]);
@@ -96,7 +97,25 @@ function UserList() {
     fetchUsers("user", 18, 85)
       .then((data) => setUsers(data))
       .catch((error) => console.error("Failed to fetch users:", error));
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const codeValue = urlParams.get("code");
+
+    if (codeValue) {
+      console.log("GitHub authentication successful. Code:", codeValue);
+
+      githubCodeExchange(codeValue)
+        .then((accessTokenData) => {
+          console.log("Access Token Data:", accessTokenData);
+        })
+        .catch((error) => {
+          console.error("Failed to exchange GitHub code:", error);
+        });
+    } else {
+      console.log("GitHub authentication failed or no 'code' parameter found.");
+    }
   }, []);
+
 
   return (
     <div>
@@ -206,7 +225,7 @@ function UserList() {
 
       <div className="scroll-to-top position-absolute end-0">
         <button className="btn btn-danger align-right" onClick={scrollToTop}>
-          <i class="bi bi-arrow-up-circle"></i> Scroll Up
+          <i className="bi bi-arrow-up-circle"></i> Scroll Up
         </button>
       </div>
     </div>

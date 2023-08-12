@@ -160,9 +160,52 @@ export const checkEmail = async (email) => {
     throw new Error("Failed to check email");
   }
 };
+
+export const githubLogin = async (url) => {
+  try {
+    const response = await axios.post(API_URL, {
+      query: `
+      mutation {
+      githubLogin{
+        githubAuthUrl
+      }
+    }
+      `,
+    });
+    console.log(response, "response");
+    return response.data.data.githubLogin;
+  } catch (error) {
+    throw new Error("Failed to login with github");
+  }
+};
+
+
+export const githubCodeExchange = async (code) => {
+  try {
+    const response = await axios.post(API_URL, {
+      query: `
+        mutation {
+          githubCodeExchange(code: "${code}") {
+            token_type
+            access_token
+            refresh_token
+            expires_in
+          }
+        }
+      `,
+    });
+
+    return response.data.data.githubCodeExchange;
+  } catch (error) {
+    throw new Error("Failed to exchange GitHub code for access token");
+  }
+};
+
 const AuthService = {
   signup,
   checkEmail,
   login,
+  githubLogin,
+  githubCodeExchange,
 };
 export default AuthService;

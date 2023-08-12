@@ -8,6 +8,8 @@ import { checkEmail } from "../auth/auth.service";
 import { useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { MarkGithubIcon } from '@primer/octicons-react';
+// import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const { state } = useLocation();
@@ -15,7 +17,7 @@ const Login = () => {
   const [email, setEmail] = useState(state?.userEmail ?? "");
   const [password, setPassword] = useState(state?.userPassword ?? "");
   const [error, setError] = useState("");
-  // const navigate = useNavigate();
+  // const navigate = useNavigate(); 
   const notify = () => toast("Login Successful!!!!!!!!!!!");
 
   const handleLogin = async (e) => {
@@ -46,6 +48,30 @@ const Login = () => {
       setError("Failed to check email");
     }
   };
+
+const handleGithubLogin = async () => {
+  try {
+    const response = await AuthService.githubLogin();
+    console.log(response);
+    if (response && response.githubAuthUrl) {
+      window.location.href = response.githubAuthUrl;
+    } else {
+      console.log("GitHub login failed or no URL received.");
+    }
+  } catch (err) {
+    console.log("Error during GitHub login:", err.message);
+  }
+  // const clientId = "******";
+  // const redirectUri = "http://localhost:3001/userlist";
+  // window.location.assign(
+  //   `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}`
+  // );
+
+};
+
+  
+
+
 
   return (
     <Container>
@@ -78,6 +104,14 @@ const Login = () => {
             </Button>
             {error && <p className="text-danger mt-3">{error}</p>}
           </Form>
+          {/* login with github */}
+          <div className="mt-3">
+          
+              <Button className="btn btn-danger" onClick={handleGithubLogin}>
+                <MarkGithubIcon size={24} className="mr-2" /> Login with GitHub
+              </Button>
+          
+          </div>
         </Col>
       </Row>
       <ToastContainer />
