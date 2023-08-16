@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-// import { useNavigate } from "react-router-dom";
 import AuthService from "../auth/auth.service";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -9,15 +8,12 @@ import { useLocation } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { MarkGithubIcon } from '@primer/octicons-react';
-// import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const { state } = useLocation();
-  // const { userEmail, userPassword } = state;
   const [email, setEmail] = useState(state?.userEmail ?? "");
   const [password, setPassword] = useState(state?.userPassword ?? "");
   const [error, setError] = useState("");
-  // const navigate = useNavigate(); 
   const notify = () => toast("Login Successful!!!!!!!!!!!");
 
   const handleLogin = async (e) => {
