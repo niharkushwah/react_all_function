@@ -14,7 +14,6 @@ const Login = () => {
   const [email, setEmail] = useState(state?.userEmail ?? "");
   const [password, setPassword] = useState(state?.userPassword ?? "");
   const [error, setError] = useState("");
-  // const navigate = useNavigate(); 
   const notify = () => toast("Login Successful!!!!!!!!!!!");
 
   const handleLogin = async (e) => {
