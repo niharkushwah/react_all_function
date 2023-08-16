@@ -11,7 +11,6 @@ import { MarkGithubIcon } from '@primer/octicons-react';
 
 const Login = () => {
   const { state } = useLocation();
-  // const { userEmail, userPassword } = state;
   const [email, setEmail] = useState(state?.userEmail ?? "");
   const [password, setPassword] = useState(state?.userPassword ?? "");
   const [error, setError] = useState("");
