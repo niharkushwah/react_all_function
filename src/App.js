@@ -5,6 +5,8 @@ import { Link, BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import UserList from "./components/User_List";
+import PullRequests from "./components/github_repo";
+import CommitPage from "./components/commits";
 
 function App() {
   return (
@@ -18,6 +20,7 @@ function App() {
               <Nav.Link as={Link} to="/login">Login</Nav.Link>
               <Nav.Link as={Link} to="/signup">Signup</Nav.Link>
               <Nav.Link as={Link} to="/userlist">User List</Nav.Link>
+              <Nav.Link as={Link} to="/getpullrequest">Github Pull Request</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Navbar>
@@ -26,6 +29,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/userlist" element={<UserList />} />
+          <Route path="/getpullrequest" element={<PullRequests />} />
+          <Route path="/commits/:repoName" component={<CommitPage/>} />
         </Routes>
       </div>
     </Router>

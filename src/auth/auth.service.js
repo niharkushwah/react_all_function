@@ -179,27 +179,61 @@ export const githubLogin = async (url) => {
   }
 };
 
-
 export const githubCodeExchange = async (code) => {
   try {
     const response = await axios.post(API_URL, {
       query: `
-        mutation {
-          githubCodeExchange(code: "${code}") {
-            token_type
-            access_token
-            refresh_token
-            expires_in
+      mutation {
+        githubCodeExchange(code: "${code}") {
+          token_type
+          access_token
+          refresh_token
+          expires_in
+          username
+        }
+      }
+      `,
+    });
+
+    localStorage.setItem(
+      "user",
+      JSON.stringify(response.data.data.githubCodeExchange.username)
+    );
+    return response.data.data.githubCodeExchange.username;
+  } catch (error) {
+    console.error("Error in githubCodeExchange:", error);
+    throw new Error("Failed to exchange GitHub code for access token");
+  }
+};
+
+export const getPullRequestsForUser = async (username) => {
+  try {
+    const response = await axios.post(API_URL, {
+      query: `
+        query {
+          getPullRequestFromDb(username: "${username}") {
+            title
+            url
+            number
+            repo_owner
+            repo_name
+            createdAt
+            repo_id
+            user_id
+            author_id
+            github_pull_metadata
           }
         }
       `,
     });
 
-    return response.data.data.githubCodeExchange;
+    console.log(response, "response");
+    return response.data.data.getPullRequestFromDb;
   } catch (error) {
-    throw new Error("Failed to exchange GitHub code for access token");
+    throw new Error("Failed to fetch pull requests for user");
   }
 };
+
 
 const AuthService = {
   signup,
@@ -207,5 +241,6 @@ const AuthService = {
   login,
   githubLogin,
   githubCodeExchange,
+  getPullRequestsForUser,
 };
 export default AuthService;
