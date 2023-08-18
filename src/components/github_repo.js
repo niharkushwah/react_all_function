@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
+import { useNavigate } from "react-router-dom";
 import { getPullRequestsForUser } from "../auth/auth.service";
 import { Card, Table } from "react-bootstrap";
-import { formatDistanceToNow } from "date-fns";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+dayjs.extend(relativeTime);
 
 const PullRequests = () => {
   const [pullRequests, setPullRequests] = useState([]);
@@ -27,8 +29,20 @@ const PullRequests = () => {
     window.open(url, "_blank");
   };
 
-  const handleRowClick = (repoName) => {
-    navigate(`/commits/${repoName}`);
+  const handleRowClick = (item) => {
+    console.log(item.github_pull_metadata.commits.nodes, "item????????");
+    const commits = item.github_pull_metadata.commits.nodes;
+    localStorage.setItem("commits", JSON.stringify(commits));
+    const queryParams = new URLSearchParams();
+    queryParams.append("title", item.title);
+    queryParams.append("branchName", item.github_pull_metadata.headRefName);
+    navigate(`/commits?${queryParams.toString()}`);
+  };
+
+  const handleBranchClick = (event, username, repo_name, baseRefName) => {
+    event.stopPropagation();
+    const branchUrl = `https://github.com/${username}/${repo_name}/tree/${baseRefName}`;
+    window.open(branchUrl, "_blank");
   };
 
   return (
@@ -40,33 +54,72 @@ const PullRequests = () => {
           <thead>
             <tr>
               <th>Title</th>
-              <th>Repository</th>
+              <th>Branch Name</th>
               <th>Created At</th>
             </tr>
           </thead>
           <tbody>
             {pullRequests.map((item) => (
-              <tr key={item.id} onClick={() => handleRowClick(item.repo_name)}>
+              <tr key={item.id}>
                 <td>
                   <div
                     onClick={(event) => handleTitleClick(event, item.url)}
-                    style={{ cursor: "pointer" }}
+                    style={{
+                      cursor: "pointer",
+                    }}
                   >
-                    {item.title}
-                    <div className="text-muted" style={{ fontSize: '10px' }}>
+                    <span
+                      style={{
+                        color: "#0366d6",
+                        textDecoration: "underline",
+                      }}
+                    >
+                      {item.title}
+                    </span>
+                    <div className="text-muted" style={{ fontSize: "10px" }}>
                       # {item.number} synchronized by {item.repo_owner}
                     </div>
                   </div>
                 </td>
-                <td>{item.repo_name}</td>
-                <td>{formatDistanceToNow(new Date(item.createdAt))} ago</td>
+                <td
+                  onClick={(event) =>
+                    handleBranchClick(
+                      event,
+                      user,
+                      item.repo_name,
+                      item.github_pull_metadata.headRefName
+                    )
+                  }
+                  style={{
+                    cursor: "pointer",
+                    color: "#0366d6",
+                    textDecoration: "underline",
+                  }}
+                >
+                  {item.github_pull_metadata.headRefName}
+                </td>
+
+                <td>{dayjs(item.createdAt).locale("en").fromNow()}</td>
                 <td>
-                  <img
-                    src={item.github_pull_metadata.author.avatarUrl}
-                    alt="Avatar"
-                    className="rounded-circle"
-                    style={{ height: "25px", width: "25px" }}
-                  />
+                  <a
+                    href={item.github_pull_metadata.author.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src={item.github_pull_metadata.author.avatarUrl}
+                      alt="Avatar"
+                      className="rounded-circle"
+                      style={{ height: "25px", width: "25px" }}
+                    />
+                  </a>
+                </td>
+
+                <td
+                  onClick={() => handleRowClick(item)}
+                  style={{ cursor: "pointer" }}
+                >
+                  <i className="fa fa-chevron-right btn btn-warning">Commits</i>
                 </td>
               </tr>
             ))}
@@ -76,6 +129,5 @@ const PullRequests = () => {
     </div>
   );
 };
-
 
 export default PullRequests;

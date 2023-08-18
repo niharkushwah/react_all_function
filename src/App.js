@@ -30,7 +30,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/userlist" element={<UserList />} />
           <Route path="/getpullrequest" element={<PullRequests />} />
-          <Route path="/commits/:repoName" component={<CommitPage/>} />
+          <Route path="/commits" element={<CommitPage/>} />
         </Routes>
       </div>
     </Router>
