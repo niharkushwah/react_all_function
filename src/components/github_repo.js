@@ -36,6 +36,7 @@ const PullRequests = () => {
     const queryParams = new URLSearchParams();
     queryParams.append("title", item.title);
     queryParams.append("branchName", item.github_pull_metadata.headRefName);
+    queryParams.append("avtarUrl", item.github_pull_metadata.author.url);
     navigate(`/commits?${queryParams.toString()}`);
   };
 
