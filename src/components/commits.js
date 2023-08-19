@@ -11,7 +11,7 @@ const CommitPage = () => {
   const queryParams = new URLSearchParams(location.search);
   const title = queryParams.get("title") || "";
   const branchName = queryParams.get("branchName") || "";
-  const avtarUrl = queryParams.get("avtarUrl") || "";  
+  const avtarUrl = queryParams.get("avtarUrl") || "";
 
   const handleCommitClick = (event, url) => {
     event.stopPropagation();
@@ -50,7 +50,12 @@ const CommitPage = () => {
         <tbody>
           {commits.map((item) => (
             <tr key={item.id}>
-              <td>{title}</td>
+              <td>
+                {title}
+                <div className="text-muted" style={{ fontSize: "10px" }}>
+                  # {item.commit.abbreviatedOid}
+                </div>
+              </td>
               <td>{branchName}</td>
               <td
                 onClick={(event) =>
@@ -67,11 +72,7 @@ const CommitPage = () => {
               <td>{dayjs(item.commit.authoredDate).locale("en").fromNow()}</td>
               <td>{item.commit.committer.name}</td>
               <td>
-                <a
-                  href={avtarUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a href={avtarUrl} target="_blank" rel="noopener noreferrer">
                   <img
                     src={item.commit.committer.avatarUrl}
                     alt="Avatar"

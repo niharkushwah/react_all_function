@@ -46,6 +46,12 @@ const PullRequests = () => {
     window.open(branchUrl, "_blank");
   };
 
+  const handleRepoClick = (event, username, repo_name) => {
+    event.stopPropagation();
+    const branchUrl = `https://github.com/${username}/${repo_name}`;
+    window.open(branchUrl, "_blank");
+  };
+
   return (
     <div>
       <h1>Pull Requests</h1>
@@ -57,6 +63,7 @@ const PullRequests = () => {
               <th>Title</th>
               <th>Branch Name</th>
               <th>Created At</th>
+              <th>Repository Name</th>
             </tr>
           </thead>
           <tbody>
@@ -101,6 +108,18 @@ const PullRequests = () => {
                 </td>
 
                 <td>{dayjs(item.createdAt).locale("en").fromNow()}</td>
+                <td
+                onClick={(event) =>
+                  handleRepoClick(event, user, item.repo_name)
+                }
+                style={{
+                  cursor: "pointer",
+                  color: "#0366d6",
+                  textDecoration: "underline",
+                }}
+                >
+                  {item.repo_name}
+                </td>
                 <td>
                   <a
                     href={item.github_pull_metadata.author.url}
@@ -115,6 +134,7 @@ const PullRequests = () => {
                     />
                   </a>
                 </td>
+               
 
                 <td
                   onClick={() => handleRowClick(item)}
