@@ -10,6 +10,7 @@ const PullRequests = () => {
   const [pullRequests, setPullRequests] = useState([]);
   const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState("");
 
   async function getData() {
     const response = await getPullRequestsForUser(user);
@@ -28,6 +29,16 @@ const PullRequests = () => {
     event.stopPropagation();
     window.open(url, "_blank");
   };
+
+  const filteredPullRequests = pullRequests.filter((item) => {
+    const searchString = searchQuery.toLowerCase();
+    return (
+      item.title.toLowerCase().includes(searchString) ||
+      item.github_pull_metadata.headRefName.toLowerCase().includes(searchString) ||
+      item.repo_name.toLowerCase().includes(searchString) ||
+      item.github_pull_metadata.author.url.toLowerCase().includes(searchString)
+    );
+  });
 
   const handleRowClick = (item) => {
     console.log(item.github_pull_metadata.commits.nodes, "item????????");
@@ -55,6 +66,13 @@ const PullRequests = () => {
   return (
     <div>
       <h1>Pull Requests</h1>
+      <input
+        type="text"
+        placeholder="Search by title..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+      />
+      <button onClick={() => setSearchQuery("")}>Clear Filter</button>
       <Card>
         <Card.Header>{pullRequests.length} workflow</Card.Header>
         <Table striped hover>
@@ -67,7 +85,7 @@ const PullRequests = () => {
             </tr>
           </thead>
           <tbody>
-            {pullRequests.map((item) => (
+            {filteredPullRequests.map((item) => (
               <tr key={item.id}>
                 <td>
                   <div
@@ -109,14 +127,14 @@ const PullRequests = () => {
 
                 <td>{dayjs(item.createdAt).locale("en").fromNow()}</td>
                 <td
-                onClick={(event) =>
-                  handleRepoClick(event, user, item.repo_name)
-                }
-                style={{
-                  cursor: "pointer",
-                  color: "#0366d6",
-                  textDecoration: "underline",
-                }}
+                  onClick={(event) =>
+                    handleRepoClick(event, user, item.repo_name)
+                  }
+                  style={{
+                    cursor: "pointer",
+                    color: "#0366d6",
+                    textDecoration: "underline",
+                  }}
                 >
                   {item.repo_name}
                 </td>
@@ -134,7 +152,6 @@ const PullRequests = () => {
                     />
                   </a>
                 </td>
-               
 
                 <td
                   onClick={() => handleRowClick(item)}
