@@ -134,7 +134,9 @@ const CommitPage = () => {
               >
                 {item.commit.message}
               </td>
-              <td>
+              <td 
+              title={dayjs(item.commit.authoredDate).format("DD MMM YYYY HH:mm:ss")}
+              >
                 {dayjs(item.commit.authoredDate).locale("en").to(dayjs(), true)}
               </td>
               <td>{item.commit.committer.name}</td>
