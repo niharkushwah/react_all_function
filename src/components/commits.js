@@ -1,17 +1,34 @@
 import React, { useEffect, useState } from "react";
-import { Table } from "react-bootstrap";
+import { Table, Alert } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useLocation } from "react-router-dom";
-import { Alert } from "react-bootstrap";
 import dayjs from "dayjs";
 
 const CommitPage = () => {
   const [commits, setCommits] = useState([]);
+  const [originalCommits, setOriginalCommits] = useState([]);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const repo = queryParams.get("repo") || "";
   const branchName = queryParams.get("branchName") || "";
   const avtarUrl = queryParams.get("avtarUrl") || "";
+  const [searchQuery, setSearchQuery] = useState("");
+  const user = JSON.parse(localStorage.getItem("user"));
+
+  const filterCommits = (searchString) => {
+    setSearchQuery(searchString);
+    const lowerSearchString = searchString.toLowerCase();
+    const filteredCommits = originalCommits.filter((item) => {
+      return (
+        item.commit.message.toLowerCase().includes(lowerSearchString) ||
+        branchName.toLowerCase().includes(lowerSearchString) ||
+        item.commit.committer.name.toLowerCase().includes(lowerSearchString) ||
+        item.commit.abbreviatedOid.toLowerCase().includes(lowerSearchString) ||
+        item.commit.message.toLowerCase().includes(lowerSearchString)
+      );
+    });
+    setCommits(filteredCommits);
+  };
 
   const handleCommitClick = (event, url) => {
     event.stopPropagation();
@@ -27,7 +44,9 @@ const CommitPage = () => {
   useEffect(() => {
     const storedCommits = localStorage.getItem("commits");
     if (storedCommits) {
-      setCommits(JSON.parse(storedCommits));
+      const parsedCommits = JSON.parse(storedCommits);
+      setCommits(parsedCommits);
+      setOriginalCommits(parsedCommits);
     }
   }, []);
 
@@ -43,6 +62,28 @@ const CommitPage = () => {
           <u>{branchName}</u>
         </b>
       </Alert>
+
+      <div className="container mt-5">
+        <div className="input-group mb-3">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search by title..."
+            value={searchQuery}
+            onChange={(e) => filterCommits(e.target.value)}
+          />
+          <div className="input-group-append">
+            <button
+              className="btn btn-outline-danger"
+              type="button"
+              onClick={() => filterCommits("")}
+            >
+              Clear Filter
+            </button>
+          </div>
+        </div>
+      </div>
+
       <Table striped hover>
         <thead>
           <tr>
@@ -64,14 +105,16 @@ const CommitPage = () => {
               </td>
               <td
                 onClick={(event) =>
-                  handleBranchClick(event, item.committer.login, repo, branchName)
+                  handleBranchClick(event, user, repo, branchName)
                 }
                 style={{
                   cursor: "pointer",
                   color: "#0366d6",
                   textDecoration: "underline",
                 }}
-              >{branchName}</td>
+              >
+                {branchName}
+              </td>
               <td
                 onClick={(event) =>
                   handleCommitClick(event, item.commit.commitUrl)
@@ -84,7 +127,14 @@ const CommitPage = () => {
               >
                 {item.commit.message}
               </td>
-              <td>{dayjs(item.commit.authoredDate).locale("en").to(dayjs(), true)}</td>
+              <td
+                title={dayjs(item.commit.authoredDate).format(
+                  "DD MMM YYYY HH:mm:ss"
+                )}
+                style={{ cursor: "pointer" }}
+              >
+                {dayjs(item.commit.authoredDate).locale("en").to(dayjs(), true)}
+              </td>
               <td>{item.commit.committer.name}</td>
               <td>
                 <a href={avtarUrl} target="_blank" rel="noopener noreferrer">
