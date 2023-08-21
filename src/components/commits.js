@@ -9,13 +9,19 @@ const CommitPage = () => {
   const [commits, setCommits] = useState([]);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const title = queryParams.get("title") || "";
+  const repo = queryParams.get("repo") || "";
   const branchName = queryParams.get("branchName") || "";
   const avtarUrl = queryParams.get("avtarUrl") || "";
 
   const handleCommitClick = (event, url) => {
     event.stopPropagation();
     window.open(url, "_blank");
+  };
+
+  const handleBranchClick = (event, username, repo_name, baseRefName) => {
+    event.stopPropagation();
+    const branchUrl = `https://github.com/${username}/${repo_name}/tree/${baseRefName}`;
+    window.open(branchUrl, "_blank");
   };
 
   useEffect(() => {
@@ -30,7 +36,7 @@ const CommitPage = () => {
       <Alert key="warning" variant="warning">
         Commits for{" "}
         <b>
-          <u>{title}</u>
+          <u>{repo}</u>
         </b>{" "}
         on branch{" "}
         <b>
@@ -51,12 +57,21 @@ const CommitPage = () => {
           {commits.map((item) => (
             <tr key={item.id}>
               <td>
-                {title}
+                {repo}
                 <div className="text-muted" style={{ fontSize: "10px" }}>
                   # {item.commit.abbreviatedOid}
                 </div>
               </td>
-              <td>{branchName}</td>
+              <td
+                onClick={(event) =>
+                  handleBranchClick(event, item.committer.login, repo, branchName)
+                }
+                style={{
+                  cursor: "pointer",
+                  color: "#0366d6",
+                  textDecoration: "underline",
+                }}
+              >{branchName}</td>
               <td
                 onClick={(event) =>
                   handleCommitClick(event, item.commit.commitUrl)
@@ -69,7 +84,7 @@ const CommitPage = () => {
               >
                 {item.commit.message}
               </td>
-              <td>{dayjs(item.commit.authoredDate).locale("en").fromNow()}</td>
+              <td>{dayjs(item.commit.authoredDate).locale("en").to(dayjs(), true)}</td>
               <td>{item.commit.committer.name}</td>
               <td>
                 <a href={avtarUrl} target="_blank" rel="noopener noreferrer">

@@ -60,7 +60,7 @@ const PullRequests = () => {
     const commits = item.github_pull_metadata.commits.nodes;
     localStorage.setItem("commits", JSON.stringify(commits));
     const queryParams = new URLSearchParams();
-    queryParams.append("title", item.title);
+    queryParams.append("repo", item.repo_name);
     queryParams.append("branchName", item.github_pull_metadata.headRefName);
     queryParams.append("avtarUrl", item.github_pull_metadata.author.url);
     navigate(`/commits?${queryParams.toString()}`);
