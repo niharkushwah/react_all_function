@@ -4,7 +4,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useLocation } from "react-router-dom";
 import dayjs from "dayjs";
 
-
 const CommitPage = () => {
   const [commits, setCommits] = useState([]);
   const [originalCommits, setOriginalCommits] = useState([]);
@@ -15,7 +14,6 @@ const CommitPage = () => {
   const avtarUrl = queryParams.get("avtarUrl") || "";
   const [searchQuery, setSearchQuery] = useState("");
   const user = JSON.parse(localStorage.getItem("user"));
-
 
   const filterCommits = (searchString) => {
     setSearchQuery(searchString);
@@ -107,12 +105,7 @@ const CommitPage = () => {
               </td>
               <td
                 onClick={(event) =>
-                  handleBranchClick(
-                    event,
-                    user,
-                    repo,
-                    branchName
-                  )
+                  handleBranchClick(event, user, repo, branchName)
                 }
                 style={{
                   cursor: "pointer",
@@ -134,8 +127,10 @@ const CommitPage = () => {
               >
                 {item.commit.message}
               </td>
-              <td 
-              title={dayjs(item.commit.authoredDate).format("DD MMM YYYY HH:mm:ss")}
+              <td
+                title={dayjs(item.commit.authoredDate).format(
+                  "DD MMM YYYY HH:mm:ss"
+                )}
               >
                 {dayjs(item.commit.authoredDate).locale("en").to(dayjs(), true)}
               </td>

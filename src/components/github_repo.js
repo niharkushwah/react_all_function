@@ -11,7 +11,6 @@ const PullRequests = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
-  
 
   async function getData() {
     const response = await getPullRequestsForUser(user);
@@ -32,8 +31,7 @@ const PullRequests = () => {
   //   console.log("response from search query", response);
   //   setPullRequests(response);
   // }
-  
-  
+
   useEffect(() => {
     getData();
     // getSearchData("test");
@@ -49,7 +47,9 @@ const PullRequests = () => {
     // console.log((item.number), "number")
     return (
       item.title.toLowerCase().includes(searchString) ||
-      item.github_pull_metadata.headRefName.toLowerCase().includes(searchString) ||
+      item.github_pull_metadata.headRefName
+        .toLowerCase()
+        .includes(searchString) ||
       item.repo_name.toLowerCase().includes(searchString) ||
       item.number === Number(searchString)
     );
@@ -82,26 +82,26 @@ const PullRequests = () => {
     <div>
       <h1>Pull Requests</h1>
       <div className="container mt-5">
-      <div className="input-group mb-3">
-        <input
-          type="text"
-          className="form-control"
-          placeholder="Search by title..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        <div className="input-group-append">
-          <button
-            className="btn btn-outline-danger"
-            type="button"
-            onClick={() => setSearchQuery('')}
-          >
-            Clear Filter
-          </button>
+        <div className="input-group mb-3">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Search by title..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <div className="input-group-append">
+            <button
+              className="btn btn-outline-danger"
+              type="button"
+              onClick={() => setSearchQuery("")}
+            >
+              Clear Filter
+            </button>
+          </div>
         </div>
       </div>
-    </div>
-{/* 
+      {/* 
     <div className="container mt-5">
       <div className="input-group mb-3">
         <input
@@ -177,7 +177,13 @@ const PullRequests = () => {
                   {item.github_pull_metadata.headRefName}
                 </td>
 
-                <td>{dayjs(item.createdAt).locale("en").fromNow()}</td>
+                <td
+                  title={dayjs(item.createdAt).format(
+                    "DD MMM YYYY HH:mm:ss"
+                  )}
+                >
+                  {dayjs(item.createdAt).locale("en").fromNow()}
+                </td>
                 <td
                   onClick={(event) =>
                     handleRepoClick(event, user, item.repo_name)
