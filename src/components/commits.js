@@ -4,15 +4,18 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useLocation } from "react-router-dom";
 import dayjs from "dayjs";
 
+
 const CommitPage = () => {
   const [commits, setCommits] = useState([]);
-  const [originalCommits, setOriginalCommits] = useState([]); // Store the original commits
+  const [originalCommits, setOriginalCommits] = useState([]);
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const repo = queryParams.get("repo") || "";
   const branchName = queryParams.get("branchName") || "";
   const avtarUrl = queryParams.get("avtarUrl") || "";
   const [searchQuery, setSearchQuery] = useState("");
+  const user = JSON.parse(localStorage.getItem("user"));
+
 
   const filterCommits = (searchString) => {
     setSearchQuery(searchString);
@@ -106,7 +109,7 @@ const CommitPage = () => {
                 onClick={(event) =>
                   handleBranchClick(
                     event,
-                    item.committer.login,
+                    user,
                     repo,
                     branchName
                   )
