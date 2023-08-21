@@ -234,6 +234,32 @@ export const getPullRequestsForUser = async (username) => {
   }
 };
 
+export const SearchPullRequests = async (searchKeyword, username) => {
+  try {
+    const response = await axios.post(API_URL, {
+      query: `
+        query {
+          searchPullRequests(searchKeyword: "${searchKeyword}" username: "${username}") {
+            title
+            url
+            number
+            repo_owner
+            repo_name
+            createdAt
+            repo_id
+            user_id
+            author_id
+            github_pull_metadata
+          }
+        }
+      `,
+    });
+    console.log(response, "response");
+    return response.data.data.searchPullRequests;
+  } catch (error) {
+    throw new Error("Failed to search pull requests");
+  }
+};
 
 const AuthService = {
   signup,
@@ -242,5 +268,7 @@ const AuthService = {
   githubLogin,
   githubCodeExchange,
   getPullRequestsForUser,
+  SearchPullRequests,
 };
+
 export default AuthService;

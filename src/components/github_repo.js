@@ -11,6 +11,7 @@ const PullRequests = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+  
 
   async function getData() {
     const response = await getPullRequestsForUser(user);
@@ -21,8 +22,21 @@ const PullRequests = () => {
     setPullRequests(response);
   }
 
+  // async function getSearchData(searchKeyword) {
+  //   setSearchQuery(searchKeyword);
+  //   const response = await SearchPullRequests(searchKeyword, user);
+  //   console.log("response from search query", response);
+  //   response.sort((a, b) => {
+  //     return new Date(b.createdAt) - new Date(a.createdAt);
+  //   });
+  //   console.log("response from search query", response);
+  //   setPullRequests(response);
+  // }
+  
+  
   useEffect(() => {
     getData();
+    // getSearchData("test");
   }, []);
 
   const handleTitleClick = (event, url) => {
@@ -32,11 +46,12 @@ const PullRequests = () => {
 
   const filteredPullRequests = pullRequests.filter((item) => {
     const searchString = searchQuery.toLowerCase();
+    // console.log((item.number), "number")
     return (
       item.title.toLowerCase().includes(searchString) ||
       item.github_pull_metadata.headRefName.toLowerCase().includes(searchString) ||
       item.repo_name.toLowerCase().includes(searchString) ||
-      item.github_pull_metadata.author.url.toLowerCase().includes(searchString)
+      item.number === Number(searchString)
     );
   });
 
@@ -66,13 +81,49 @@ const PullRequests = () => {
   return (
     <div>
       <h1>Pull Requests</h1>
-      <input
-        type="text"
-        placeholder="Search by title..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-      />
-      <button onClick={() => setSearchQuery("")}>Clear Filter</button>
+      <div className="container mt-5">
+      <div className="input-group mb-3">
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Search by title..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+        />
+        <div className="input-group-append">
+          <button
+            className="btn btn-outline-danger"
+            type="button"
+            onClick={() => setSearchQuery('')}
+          >
+            Clear Filter
+          </button>
+        </div>
+      </div>
+    </div>
+{/* 
+    <div className="container mt-5">
+      <div className="input-group mb-3">
+        <input
+          type="text"
+          className="form-control"
+          placeholder="Search by title..."
+          value={searchQuery}
+          onChange={(e) => getSearchData(e.target.value)}
+        />
+        <div className="input-group-append">
+          <button
+            className="btn btn-outline-secondary"
+            type="button"
+            onClick={() => setSearchQuery('')}
+          >
+            Clear Filter
+          </button>
+        </div>
+      </div>
+    </div>
+     */}
+
       <Card>
         <Card.Header>{pullRequests.length} workflow</Card.Header>
         <Table striped hover>
@@ -85,6 +136,7 @@ const PullRequests = () => {
             </tr>
           </thead>
           <tbody>
+            {console.log(filteredPullRequests)}
             {filteredPullRequests.map((item) => (
               <tr key={item.id}>
                 <td>
