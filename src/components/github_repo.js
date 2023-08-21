@@ -181,6 +181,7 @@ const PullRequests = () => {
                   title={dayjs(item.createdAt).format(
                     "DD MMM YYYY HH:mm:ss"
                   )}
+                  style={{ cursor: "pointer" }}
                 >
                   {dayjs(item.createdAt).locale("en").fromNow()}
                 </td>

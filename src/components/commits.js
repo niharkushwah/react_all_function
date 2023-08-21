@@ -131,6 +131,7 @@ const CommitPage = () => {
                 title={dayjs(item.commit.authoredDate).format(
                   "DD MMM YYYY HH:mm:ss"
                 )}
+                style={{ cursor: "pointer" }}
               >
                 {dayjs(item.commit.authoredDate).locale("en").to(dayjs(), true)}
               </td>
