@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getPullRequestsForUser } from "../auth/auth.service";
-import { Card, Table } from "react-bootstrap";
+import { Badge, Card, Table } from "react-bootstrap";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 dayjs.extend(relativeTime);
@@ -130,6 +130,7 @@ const PullRequests = () => {
           <thead>
             <tr>
               <th>Title</th>
+              <th>Status</th>
               <th>Branch Name</th>
               <th>Created At</th>
               <th>Repository Name</th>
@@ -155,9 +156,21 @@ const PullRequests = () => {
                       {item.title}
                     </span>
                     <div className="text-muted" style={{ fontSize: "10px" }}>
-                      # {item.number} synchronized by {item.repo_owner}
+                      <span style={{ backgroundColor: "#ADD8E6", borderRadius: "5px" }} ># {item.number} synchronized by {item.repo_owner}</span>
                     </div>
                   </div>
+                </td>
+                <td>
+                  {console.log(item.github_pull_metadata.closed, "item????????")}
+                  {item.github_pull_metadata.closed === false ? (
+                    <Badge bg="success">
+                    <span>OPEN</span>
+                    </Badge>
+                  ) : (
+                    <Badge bg="danger">
+                    <span>CLOSED</span>
+                    </Badge>
+                  )}
                 </td>
                 <td
                   onClick={(event) =>
@@ -171,10 +184,9 @@ const PullRequests = () => {
                   style={{
                     cursor: "pointer",
                     color: "#0366d6",
-                    textDecoration: "underline",
                   }}
                 >
-                  {item.github_pull_metadata.headRefName}
+                  <span style={{ backgroundColor: "#ADD8E6", borderRadius: "5px" }}>{item.github_pull_metadata.headRefName}</span>
                 </td>
 
                 <td
