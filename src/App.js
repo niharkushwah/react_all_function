@@ -7,9 +7,13 @@ import Signup from "./components/Signup";
 import UserList from "./components/User_List";
 import PullRequests from "./components/github_repo";
 import CommitPage from "./components/commits";
+import { ApolloProvider } from "@apollo/client";
+import { apolloClient } from "./auth/apolloClient";
+
 
 function App() {
   return (
+    <ApolloProvider client={apolloClient}>
     <Router>
       <div className="App">
         <Navbar bg="dark" variant="dark" expand="lg">
@@ -34,6 +38,7 @@ function App() {
         </Routes>
       </div>
     </Router>
+    </ApolloProvider>
   );
 }
 

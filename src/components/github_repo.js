@@ -4,6 +4,10 @@ import { getPullRequestsForUser } from "../auth/auth.service";
 import { Badge, Card, Table } from "react-bootstrap";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { SUBSCRIBE_PULL_REQUESTS } from "../auth/auth.service";
+import { apolloClient } from "../auth/apolloClient";
+import { useSubscription } from "@apollo/client";
+
 dayjs.extend(relativeTime);
 
 const PullRequests = () => {
@@ -11,6 +15,15 @@ const PullRequests = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+  
+  const { data: subscriptionData } = useSubscription(SUBSCRIBE_PULL_REQUESTS, {
+    client: apolloClient,
+  });
+  
+  console.log(
+    subscriptionData,
+    "subscriptionData?????????????"
+  );
 
   async function getData() {
     const response = await getPullRequestsForUser(user);
@@ -156,19 +169,29 @@ const PullRequests = () => {
                       {item.title}
                     </span>
                     <div className="text-muted" style={{ fontSize: "10px" }}>
-                      <span style={{ backgroundColor: "#ADD8E6", borderRadius: "5px" }} ># {item.number} synchronized by {item.repo_owner}</span>
+                      <span
+                        style={{
+                          backgroundColor: "#ADD8E6",
+                          borderRadius: "5px",
+                        }}
+                      >
+                        # {item.number} synchronized by {item.repo_owner}
+                      </span>
                     </div>
                   </div>
                 </td>
                 <td>
-                  {console.log(item.github_pull_metadata.closed, "item????????")}
+                  {console.log(
+                    item.github_pull_metadata.closed,
+                    "item????????"
+                  )}
                   {item.github_pull_metadata.closed === false ? (
                     <Badge bg="success">
-                    <span>OPEN</span>
+                      <span>OPEN</span>
                     </Badge>
                   ) : (
                     <Badge bg="danger">
-                    <span>CLOSED</span>
+                      <span>CLOSED</span>
                     </Badge>
                   )}
                 </td>
@@ -186,13 +209,15 @@ const PullRequests = () => {
                     color: "#0366d6",
                   }}
                 >
-                  <span style={{ backgroundColor: "#ADD8E6", borderRadius: "5px" }}>{item.github_pull_metadata.headRefName}</span>
+                  <span
+                    style={{ backgroundColor: "#ADD8E6", borderRadius: "5px" }}
+                  >
+                    {item.github_pull_metadata.headRefName}
+                  </span>
                 </td>
 
                 <td
-                  title={dayjs(item.createdAt).format(
-                    "DD MMM YYYY HH:mm:ss"
-                  )}
+                  title={dayjs(item.createdAt).format("DD MMM YYYY HH:mm:ss")}
                   style={{ cursor: "pointer" }}
                 >
                   {dayjs(item.createdAt).locale("en").fromNow()}

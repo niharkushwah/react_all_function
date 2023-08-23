@@ -1,4 +1,5 @@
 import axios from "axios";
+import { gql } from "@apollo/client";
 const API_URL = "http://localhost:3000/graphql";
 
 export const login = (email, password) => {
@@ -261,6 +262,22 @@ export const SearchPullRequests = async (searchKeyword, username) => {
   }
 };
 
+export const SUBSCRIBE_PULL_REQUESTS = gql`
+  subscription {
+    newPullRequest {
+      title
+      url
+      number
+      repo_owner  
+      repo_name
+      repo_id
+      user_id
+      author_id
+      github_pull_metadata
+    }
+  }
+`;
+
 const AuthService = {
   signup,
   checkEmail,
@@ -269,6 +286,7 @@ const AuthService = {
   githubCodeExchange,
   getPullRequestsForUser,
   SearchPullRequests,
+  SUBSCRIBE_PULL_REQUESTS
 };
 
 export default AuthService;
