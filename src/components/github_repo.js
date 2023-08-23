@@ -12,6 +12,8 @@ dayjs.extend(relativeTime);
 
 const PullRequests = () => {
   const [pullRequests, setPullRequests] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
@@ -24,6 +26,20 @@ const PullRequests = () => {
     subscriptionData,
     "subscriptionData?????????????"
   );
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    const maxPage = Math.ceil(filteredPullRequests.length / itemsPerPage);
+    if (currentPage < maxPage) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
 
   async function getData() {
     const response = await getPullRequestsForUser(user);
@@ -91,6 +107,11 @@ const PullRequests = () => {
     window.open(branchUrl, "_blank");
   };
 
+  
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const visiblePullRequests = filteredPullRequests.slice(startIndex, endIndex);
+
   return (
     <div>
       <h1>Pull Requests</h1>
@@ -151,7 +172,7 @@ const PullRequests = () => {
           </thead>
           <tbody>
             {console.log(filteredPullRequests)}
-            {filteredPullRequests.map((item) => (
+            {visiblePullRequests.map((item) => (
               <tr key={item.id}>
                 <td>
                   <div
@@ -259,6 +280,14 @@ const PullRequests = () => {
             ))}
           </tbody>
         </Table>
+        <div className="pagination-controls">
+        <button className="btn btn-outline-secondary" onClick={handlePreviousPage}>
+          Previous
+        </button>
+        <button className="btn btn-outline-secondary" onClick={handleNextPage}>
+          Next
+        </button>
+      </div>
       </Card>
     </div>
   );
