@@ -57,12 +57,7 @@ const handleGithubLogin = async () => {
   } catch (err) {
     console.log("Error during GitHub login:", err.message);
   }
-
 };
-
-  
-
-
 
   return (
     <Container>
