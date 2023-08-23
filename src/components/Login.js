@@ -57,11 +57,6 @@ const handleGithubLogin = async () => {
   } catch (err) {
     console.log("Error during GitHub login:", err.message);
   }
-  // const clientId = "******";
-  // const redirectUri = "http://localhost:3001/userlist";
-  // window.location.assign(
-  //   `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}`
-  // );
 
 };
 
