@@ -97,7 +97,6 @@ function UserList() {
     fetchUsers("user", 18, 85)
       .then((data) => setUsers(data))
       .catch((error) => console.error("Failed to fetch users:", error));
-
     const urlParams = new URLSearchParams(window.location.search);
     const codeValue = urlParams.get("code");
 
