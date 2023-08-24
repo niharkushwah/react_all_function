@@ -179,6 +179,7 @@ const CommitPage = () => {
                 </a>
               </td>
             </tr>
+            
           ))}
         </tbody>
       </Table>
