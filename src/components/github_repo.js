@@ -114,7 +114,6 @@ const PullRequests = () => {
     window.open(branchUrl, "_blank");
   };
 
-  
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const visiblePullRequests = filteredPullRequests.slice(startIndex, endIndex);
