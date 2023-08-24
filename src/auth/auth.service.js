@@ -283,9 +283,7 @@ export const SUBSCRIBE_PULL_REQUESTS = gql`
 export const SUBSCRIBE_COMMITS = gql`
   subscription {
     newCommit{
-      url
-      title
-      number
+      commits
     }
   }
 `;

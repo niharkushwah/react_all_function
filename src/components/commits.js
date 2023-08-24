@@ -61,9 +61,14 @@ const CommitPage = () => {
     });
     setCommits(response);
   }
+
   useEffect(() => {
-    getData();
-  }, []);
+    if (data) {
+      setCommits(data.newCommit.commits.nodes);
+    }
+    
+  }, [data]);
+  
 
   return (
     <div>
