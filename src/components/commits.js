@@ -98,8 +98,8 @@ const CommitPage = () => {
           </tr>
         </thead>
         <tbody>
-          {commits.map((item) => (
-            <tr key={item.id}>
+          {commits.map((item, index) => (
+            <tr key={index}>
               <td>
                 {repo}
                 <div className="text-muted" style={{ fontSize: "10px" }}>

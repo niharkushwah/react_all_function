@@ -268,8 +268,9 @@ export const SUBSCRIBE_PULL_REQUESTS = gql`
       title
       url
       number
-      repo_owner  
+      repo_owner
       repo_name
+      createdAt
       repo_id
       user_id
       author_id
@@ -286,7 +287,7 @@ const AuthService = {
   githubCodeExchange,
   getPullRequestsForUser,
   SearchPullRequests,
-  SUBSCRIBE_PULL_REQUESTS
+  SUBSCRIBE_PULL_REQUESTS,
 };
 
 export default AuthService;

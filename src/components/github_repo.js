@@ -46,8 +46,11 @@ const PullRequests = () => {
     response.sort((a, b) => {
       return new Date(b.createdAt) - new Date(a.createdAt);
     });
-    console.log(response, "response??????????");
-    setPullRequests(response);
+    if(subscriptionData){
+      setPullRequests(subscriptionData.newPullRequest);
+    }else{
+      setPullRequests(response);
+    }
   }
 
   // async function getSearchData(searchKeyword) {
@@ -62,9 +65,13 @@ const PullRequests = () => {
   // }
 
   useEffect(() => {
-    getData();
-    // getSearchData("test");
-  }, []);
+    if (subscriptionData && subscriptionData.newPullRequest) {
+      setPullRequests(subscriptionData.newPullRequest);
+    } else {
+      getData();
+    }
+  }, [subscriptionData]);
+
 
   const handleTitleClick = (event, url) => {
     event.stopPropagation();
@@ -73,7 +80,6 @@ const PullRequests = () => {
 
   const filteredPullRequests = pullRequests.filter((item) => {
     const searchString = searchQuery.toLowerCase();
-    // console.log((item.number), "number")
     return (
       item.title.toLowerCase().includes(searchString) ||
       item.github_pull_metadata.headRefName
@@ -172,8 +178,8 @@ const PullRequests = () => {
           </thead>
           <tbody>
             {console.log(filteredPullRequests)}
-            {visiblePullRequests.map((item) => (
-              <tr key={item.id}>
+            {visiblePullRequests.map((item, index) => (
+              <tr key={index}>
                 <td>
                   <div
                     onClick={(event) => handleTitleClick(event, item.url)}
