@@ -279,6 +279,24 @@ export const SUBSCRIBE_PULL_REQUESTS = gql`
   }
 `;
 
+export const getCommitsForPullRequest = async (user, url) => {
+  try {
+    const response = await axios.post(API_URL, {
+      query: `
+        query {
+          getCommitsForPullRequest(username: "${user}", url: "${url}") {
+            commits
+          }
+        }
+      `,
+    });
+    console.log(response.data.data.getCommitsForPullRequest.commits.nodes, "response");
+    return response.data.data.getCommitsForPullRequest.commits.nodes;
+  } catch (error) {
+    throw new Error("Failed to fetch commits for pull request");
+  }
+};
+
 const AuthService = {
   signup,
   checkEmail,
@@ -288,6 +306,7 @@ const AuthService = {
   getPullRequestsForUser,
   SearchPullRequests,
   SUBSCRIBE_PULL_REQUESTS,
+  getCommitsForPullRequest,
 };
 
 export default AuthService;

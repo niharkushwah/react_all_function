@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import { useLocation } from "react-router-dom";
 import dayjs from "dayjs";
 import moment from "moment";
+import AuthService from "../auth/auth.service";
 
 const CommitPage = () => {
   const [commits, setCommits] = useState([]);
@@ -15,6 +16,7 @@ const CommitPage = () => {
   const avtarUrl = queryParams.get("avtarUrl") || "";
   const [searchQuery, setSearchQuery] = useState("");
   const user = JSON.parse(localStorage.getItem("user"));
+  const url = queryParams.get("url");
 
   const filterCommits = (searchString) => {
     setSearchQuery(searchString);
@@ -41,16 +43,15 @@ const CommitPage = () => {
     window.open(branchUrl, "_blank");
   };
 
+  async function getData() {
+    const response = await AuthService.getCommitsForPullRequest(user, url);
+    response.sort((a, b) => {
+      return new Date(b.commit.authoredDate) - new Date(a.commit.authoredDate);
+    });
+    setCommits(response);
+  }
   useEffect(() => {
-    const storedCommits = localStorage.getItem("commits");
-    if (storedCommits) {
-      const parsedCommits = JSON.parse(storedCommits);
-      parsedCommits.sort((a, b) => {
-        return new Date(b.commit.authoredDate) - new Date(a.commit.authoredDate);
-      });
-      setCommits(parsedCommits);
-      setOriginalCommits(parsedCommits);
-    }
+    getData();
   }, []);
 
   return (
@@ -103,7 +104,12 @@ const CommitPage = () => {
               <td>
                 {repo}
                 <div className="text-muted" style={{ fontSize: "10px" }}>
-                 <span style={{ backgroundColor: "#ADD8E6", borderRadius: "5px" }}> # {item.commit.abbreviatedOid}</span>
+                  <span
+                    style={{ backgroundColor: "#ADD8E6", borderRadius: "5px" }}
+                  >
+                    {" "}
+                    # {item.commit.abbreviatedOid}
+                  </span>
                 </div>
               </td>
               <td
@@ -115,8 +121,10 @@ const CommitPage = () => {
                   color: "#0366d6",
                 }}
               >
-                <span style={{ backgroundColor: "#ADD8E6", borderRadius: "5px" }}>
-                {branchName}
+                <span
+                  style={{ backgroundColor: "#ADD8E6", borderRadius: "5px" }}
+                >
+                  {branchName}
                 </span>
               </td>
               <td
@@ -128,7 +136,11 @@ const CommitPage = () => {
                   color: "#0366d6",
                 }}
               >
-                <span style={{ backgroundColor: "#ADD8E6", borderRadius: "5px" }} >{item.commit.message}</span>
+                <span
+                  style={{ backgroundColor: "#ADD8E6", borderRadius: "5px" }}
+                >
+                  {item.commit.message}
+                </span>
               </td>
               <td
                 title={dayjs(item.commit.authoredDate).format(
