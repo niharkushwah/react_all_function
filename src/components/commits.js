@@ -5,6 +5,9 @@ import { useLocation } from "react-router-dom";
 import dayjs from "dayjs";
 import moment from "moment";
 import AuthService from "../auth/auth.service";
+import { SUBSCRIBE_COMMITS } from "../auth/auth.service";
+import { apolloClient } from "../auth/apolloClient";
+import { useSubscription } from "@apollo/client";
 
 const CommitPage = () => {
   const [commits, setCommits] = useState([]);
@@ -17,6 +20,17 @@ const CommitPage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const user = JSON.parse(localStorage.getItem("user"));
   const url = queryParams.get("url");
+
+  const { data } = useSubscription(SUBSCRIBE_COMMITS,
+    {
+      client: apolloClient,
+      variables: {
+        url: url,
+      },
+    }
+    );
+
+    console.log(data, "data");
 
   const filterCommits = (searchString) => {
     setSearchQuery(searchString);
