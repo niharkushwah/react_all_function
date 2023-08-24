@@ -66,8 +66,11 @@ const CommitPage = () => {
     if (data) {
       setCommits(data.newCommit.commits.nodes);
     }
+    else {
+      getData();
+    }
     
-  }, [data]);
+  },[]);
   
 
   return (
