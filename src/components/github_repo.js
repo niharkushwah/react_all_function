@@ -98,7 +98,7 @@ const PullRequests = () => {
     queryParams.append("repo", item.repo_name);
     queryParams.append("branchName", item.github_pull_metadata.headRefName);
     queryParams.append("avtarUrl", item.github_pull_metadata.author.url);
-    queryParams.append("url", item.url);
+    queryParams.append("url", item.commits.nodes[0].url);
     navigate(`/commits?${queryParams.toString()}`);
   };
 

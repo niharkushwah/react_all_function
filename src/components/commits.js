@@ -24,9 +24,6 @@ const CommitPage = () => {
   const { data } = useSubscription(SUBSCRIBE_COMMITS,
     {
       client: apolloClient,
-      variables: {
-        url: url,
-      },
     }
     );
 
@@ -58,7 +55,7 @@ const CommitPage = () => {
   };
 
   async function getData() {
-    const response = await AuthService.getCommitsForPullRequest(user, url);
+    const response = await AuthService.getCommitsForPullRequest(user, url, repo);
     response.sort((a, b) => {
       return new Date(b.commit.authoredDate) - new Date(a.commit.authoredDate);
     });
