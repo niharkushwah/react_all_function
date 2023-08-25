@@ -25,14 +25,6 @@ const CommitPage = () => {
     client: apolloClient,
   });
   
-  let sortedCommits = [];
-  
-  if (data && data.newCommit && data.newCommit.commits.nodes) {
-    sortedCommits = [...data.newCommit.commits.nodes].sort((a, b) => {
-      return new Date(b.commit.authoredDate) - new Date(a.commit.authoredDate);
-    });
-  }
-  
 
   console.log(data, "data");
 
