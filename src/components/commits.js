@@ -72,15 +72,12 @@ const CommitPage = () => {
   }
 
   useEffect(() => {
-    if (data) {
-      setCommits(data.newCommit.commits.nodes);
-    }
-    else {
+    if (data && data.newCommit && data.newCommit.commits.nodes) {
+      setCommits([...data.newCommit.commits.nodes]);
+    } else {
       getData();
     }
-    
-  },[]);
-  
+  }, [data]);
 
   return (
     <div>
