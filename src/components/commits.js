@@ -21,11 +21,20 @@ const CommitPage = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const url = queryParams.get("url");
 
-  const { data } = useSubscription(SUBSCRIBE_COMMITS,
-    {
-      client: apolloClient,
-    }
-    );
+  const { data } = useSubscription(SUBSCRIBE_COMMITS, {
+    client: apolloClient,
+  });
+  
+  let sortedCommits = [];
+  
+  if (data && data.newCommit && data.newCommit.commits.nodes) {
+    sortedCommits = [...data.newCommit.commits.nodes].sort((a, b) => {
+      return new Date(b.commit.authoredDate) - new Date(a.commit.authoredDate);
+    });
+  }
+  
+
+  console.log(data, "data");
 
     console.log(data, "data");
 
@@ -53,7 +62,7 @@ const CommitPage = () => {
     const branchUrl = `https://github.com/${username}/${repo_name}/tree/${baseRefName}`;
     window.open(branchUrl, "_blank");
   };
-
+  
   async function getData() {
     const response = await AuthService.getCommitsForPullRequest(user, url, repo);
     response.sort((a, b) => {
