@@ -12,8 +12,7 @@ dayjs.extend(relativeTime);
 
 const PullRequests = () => {
   const [pullRequests, setPullRequests] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+ 
   const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
@@ -24,18 +23,6 @@ const PullRequests = () => {
 
   console.log(subscriptionData, "subscriptionData?????????????");
 
-  const handlePreviousPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
-
-  const handleNextPage = () => {
-    const maxPage = Math.ceil(filteredPullRequests.length / itemsPerPage);
-    if (currentPage < maxPage) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
 
   async function getData() {
     const response = await getPullRequestsForUser(user);
