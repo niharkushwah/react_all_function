@@ -17,15 +17,12 @@ const PullRequests = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
-  
+
   const { data: subscriptionData } = useSubscription(SUBSCRIBE_PULL_REQUESTS, {
     client: apolloClient,
   });
-  
-  console.log(
-    subscriptionData,
-    "subscriptionData?????????????"
-  );
+
+  console.log(subscriptionData, "subscriptionData?????????????");
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
@@ -40,15 +37,14 @@ const PullRequests = () => {
     }
   };
 
-
   async function getData() {
     const response = await getPullRequestsForUser(user);
     response.sort((a, b) => {
       return new Date(b.createdAt) - new Date(a.createdAt);
     });
-    if(subscriptionData){
+    if (subscriptionData) {
       setPullRequests(subscriptionData.newPullRequest);
-    }else{
+    } else {
       setPullRequests(response);
     }
   }
@@ -71,7 +67,6 @@ const PullRequests = () => {
       getData();
     }
   }, [subscriptionData]);
-
 
   const handleTitleClick = (event, url) => {
     event.stopPropagation();
@@ -98,7 +93,7 @@ const PullRequests = () => {
     queryParams.append("repo", item.repo_name);
     queryParams.append("branchName", item.github_pull_metadata.headRefName);
     queryParams.append("avtarUrl", item.github_pull_metadata.author.url);
-    queryParams.append("url", item.url);
+    queryParams.append("url", item.commits.nodes[0].url);
     navigate(`/commits?${queryParams.toString()}`);
   };
 
@@ -113,10 +108,6 @@ const PullRequests = () => {
     const branchUrl = `https://github.com/${username}/${repo_name}`;
     window.open(branchUrl, "_blank");
   };
-
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const visiblePullRequests = filteredPullRequests.slice(startIndex, endIndex);
 
   return (
     <div>
@@ -178,7 +169,7 @@ const PullRequests = () => {
           </thead>
           <tbody>
             {console.log(filteredPullRequests)}
-            {visiblePullRequests.map((item, index) => (
+            {filteredPullRequests.map((item, index) => (
               <tr key={index}>
                 <td>
                   <div
@@ -286,14 +277,6 @@ const PullRequests = () => {
             ))}
           </tbody>
         </Table>
-        <div className="pagination-controls">
-        <button className="btn btn-outline-secondary" onClick={handlePreviousPage}>
-          Previous
-        </button>
-        <button className="btn btn-outline-secondary" onClick={handleNextPage}>
-          Next
-        </button>
-      </div>
       </Card>
     </div>
   );

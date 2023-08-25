@@ -223,6 +223,7 @@ export const getPullRequestsForUser = async (username) => {
             user_id
             author_id
             github_pull_metadata
+            commits
           }
         }
       `,
@@ -279,12 +280,21 @@ export const SUBSCRIBE_PULL_REQUESTS = gql`
   }
 `;
 
-export const getCommitsForPullRequest = async (user, url) => {
+export const SUBSCRIBE_COMMITS = gql`
+  subscription {
+    newCommit{
+      commits
+    }
+  }
+`;
+
+
+export const getCommitsForPullRequest = async (user, url, repo_name) => {
   try {
     const response = await axios.post(API_URL, {
       query: `
         query {
-          getCommitsForPullRequest(username: "${user}", url: "${url}") {
+          getCommitsForPullRequest(username: "${user}", url: "${url}", repo_name: "${repo_name}") {
             commits
           }
         }
