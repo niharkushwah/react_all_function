@@ -24,19 +24,9 @@ const CommitPage = () => {
   const { data } = useSubscription(SUBSCRIBE_COMMITS, {
     client: apolloClient,
   });
-  
-  let sortedCommits = [];
-  
-  if (data && data.newCommit && data.newCommit.commits.nodes) {
-    sortedCommits = [...data.newCommit.commits.nodes].sort((a, b) => {
-      return new Date(b.commit.authoredDate) - new Date(a.commit.authoredDate);
-    });
-  }
-  
+  console.log("data", data);
 
-  console.log(data, "data");
-
-    console.log(data, "data");
+  
 
   const filterCommits = (searchString) => {
     setSearchQuery(searchString);
@@ -44,7 +34,6 @@ const CommitPage = () => {
     const filteredCommits = originalCommits.filter((item) => {
       return (
         item.commit.message.toLowerCase().includes(lowerSearchString) ||
-        // branchName.toLowerCase().includes(lowerSearchString) ||
         item.commit.committer.name.toLowerCase().includes(lowerSearchString) ||
         item.commit.abbreviatedOid.toLowerCase().includes(lowerSearchString)
       );
@@ -72,14 +61,15 @@ const CommitPage = () => {
   }
 
   useEffect(() => {
-    if (data) {
-      setCommits(data.newCommit.commits.nodes);
-    }
-    else {
+    if (data && data.newCommit && data.newCommit.commits.nodes) {
+      const sortedCommits = [...data.newCommit.commits.nodes].sort((a, b) => {
+        return new Date(b.commit.authoredDate) - new Date(a.commit.authoredDate);
+      });
+      setCommits(sortedCommits);
+    } else {
       getData();
     }
-    
-  },[]);
+  }, [data]);
   
 
   return (
