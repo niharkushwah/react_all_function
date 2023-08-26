@@ -307,6 +307,61 @@ export const getCommitsForPullRequest = async (user, url, repo_name) => {
   }
 };
 
+export const getWorkflowRunFromDb = async (user) => {
+  try {
+    const response = await axios.post(API_URL, {
+      query: `
+        query {
+          getWorkflowRunFromDb(username: "${user}") {
+            title
+            url
+            createdAt
+            user_id
+            author_id
+            repo_id
+            repo_owner
+            repo_name
+            GitHubWorkflowJob
+            id
+            Status
+          }
+        }
+      `,
+    });
+    return response.data.data.getWorkflowRunFromDb;
+  } catch (error) {
+    throw new Error("Failed to fetch workflow run for user");
+  }
+}
+
+export const getWorkflowJobfromDb = async (user, repo_name) => {
+  try {
+    const response = await axios.post(API_URL, {
+      query: `
+        query {
+          getWorkflowJobFromDb(username: "${user}") {
+            title
+            url
+            createdAt
+            user_id
+            author_id
+            repo_id
+            repo_owner
+            repo_name
+            GitHubWorkflowJob
+            id
+            Status
+          }
+        }
+      `,
+    });
+    return response.data.data.getWorkflowJobFromDb;
+  } catch (error) {
+    throw new Error("Failed to fetch workflow jobs for user");
+  }
+}
+
+
 const AuthService = {
   signup,
   checkEmail,
@@ -317,6 +372,7 @@ const AuthService = {
   SearchPullRequests,
   SUBSCRIBE_PULL_REQUESTS,
   getCommitsForPullRequest,
+  SUBSCRIBE_COMMITS
 };
 
 export default AuthService;
