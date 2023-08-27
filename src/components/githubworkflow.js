@@ -28,6 +28,29 @@ const GitHubWorkflowPage = () => {
     }
   };
 
+  const fetchRun = async () => {
+    try{
+      const runsResponse = await getWorkflowRunFromDb(user);
+    
+      setWorkflowRuns(runsResponse);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+
+  };
+
+  const fetchJob = async () => {
+    try{
+      const jobsResponse = await getWorkflowJobfromDb(user);
+
+      setWorkflowJobs(jobsResponse);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+
+
   const handleTitleClick = (event, url) => {
     event.stopPropagation();
     window.open(url, "_blank");
@@ -51,11 +74,20 @@ const GitHubWorkflowPage = () => {
   console.log("WorkFlowDataRun", WorkFlowDataRun);
   
   useEffect(() => {
+    // if (WorkFlowDataRun) {
+    //   setWorkflowRuns([WorkFlowDataRun.newWorkflowRun]);
+    // }
+    // if (WorkFlowDataJob) {
+    //   setWorkflowJobs([WorkFlowDataJob.newWorkflowJob]);
+    // } else {
+    //   fetchData();
+    // }
+
     if (WorkFlowDataRun) {
-      setWorkflowRuns([WorkFlowDataRun.newWorkflowRun]);
+      fetchRun();
     }
     if (WorkFlowDataJob) {
-      setWorkflowJobs([WorkFlowDataJob.newWorkflowJob]);
+      fetchJob();
     } else {
       fetchData();
     }
