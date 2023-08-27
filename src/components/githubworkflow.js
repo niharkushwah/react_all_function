@@ -38,13 +38,13 @@ const GitHubWorkflowPage = () => {
     window.open(url, "_blank");
   };
   
-  const { data: WorkFlowDataJob } = useSubscription(GET_WORKFLOW_RUN, {
+  const { data: WorkFlowDataJob } = useSubscription(GET_WORKFLOW_JOB, {
     client: apolloClient,
   });
   
   console.log("WorkFlowDataJob", WorkFlowDataJob);
   
-  const { data: WorkFlowDataRun } = useSubscription(GET_WORKFLOW_JOB, {
+  const { data: WorkFlowDataRun } = useSubscription(GET_WORKFLOW_RUN, {
     client: apolloClient,
   });
   
@@ -52,10 +52,10 @@ const GitHubWorkflowPage = () => {
   
   useEffect(() => {
     if (WorkFlowDataRun) {
-      setWorkflowRuns([...workflowRuns, WorkFlowDataRun.newWorkflowRun]);
+      setWorkflowRuns([WorkFlowDataRun.newWorkflowRun]);
     }
     if (WorkFlowDataJob) {
-      setWorkflowJobs([...workflowJobs, WorkFlowDataJob.newWorkflowJob]);
+      setWorkflowJobs([WorkFlowDataJob.newWorkflowJob]);
     } else {
       fetchData();
     }
