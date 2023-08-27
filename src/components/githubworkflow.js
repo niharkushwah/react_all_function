@@ -42,25 +42,25 @@ const GitHubWorkflowPage = () => {
     client: apolloClient,
   });
   
-  console.log("subscriptionData", WorkFlowDataJob);
+  console.log("WorkFlowDataJob", WorkFlowDataJob);
   
   const { data: WorkFlowDataRun } = useSubscription(GET_WORKFLOW_JOB, {
     client: apolloClient,
   });
   
-  console.log("subscriptionData2", WorkFlowDataRun);
+  console.log("WorkFlowDataRun", WorkFlowDataRun);
   
   useEffect(() => {
     if (WorkFlowDataRun) {
-      setWorkflowRuns(WorkFlowDataRun);
+      setWorkflowRuns(WorkFlowDataRun.newWorkflowRun);
     }
     if (WorkFlowDataJob) {
-      setWorkflowJobs(WorkFlowDataJob);
+      setWorkflowJobs(WorkFlowDataJob.newWorkflowJob);
     }
     else {
       fetchData();
     }
-  }, [WorkFlowDataRun, WorkFlowDataJob]);
+  }, []);
     
 
   return (
