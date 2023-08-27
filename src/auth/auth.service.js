@@ -282,12 +282,11 @@ export const SUBSCRIBE_PULL_REQUESTS = gql`
 
 export const SUBSCRIBE_COMMITS = gql`
   subscription {
-    newCommit{
+    newCommit {
       commits
     }
   }
 `;
-
 
 export const getCommitsForPullRequest = async (user, url, repo_name) => {
   try {
@@ -300,12 +299,105 @@ export const getCommitsForPullRequest = async (user, url, repo_name) => {
         }
       `,
     });
-    console.log(response.data.data.getCommitsForPullRequest.commits.nodes, "response");
+    console.log(
+      response.data.data.getCommitsForPullRequest.commits.nodes,
+      "response"
+    );
     return response.data.data.getCommitsForPullRequest.commits.nodes;
   } catch (error) {
     throw new Error("Failed to fetch commits for pull request");
   }
 };
+
+export const getWorkflowRunFromDb = async (user) => {
+  try {
+    const response = await axios.post(API_URL, {
+      query: `
+        query {
+          getWorkflowRunFromDb(username: "${user}") {
+            title
+            url
+            createdAt
+            user_id
+            author_id
+            repo_id
+            repo_owner
+            repo_name
+            GitHubWorkflowJob
+            id
+            Status
+          }
+        }
+      `,
+    });
+    return response.data.data.getWorkflowRunFromDb;
+  } catch (error) {
+    throw new Error("Failed to fetch workflow run for user");
+  }
+};
+
+export const getWorkflowJobfromDb = async (user, repo_name) => {
+  try {
+    const response = await axios.post(API_URL, {
+      query: `
+        query {
+          getWorkflowJobFromDb(username: "${user}") {
+            title
+            url
+            createdAt
+            user_id
+            author_id
+            repo_id
+            repo_owner
+            repo_name
+            GitHubWorkflowJob
+            id
+            Status
+          }
+        }
+      `,
+    });
+    return response.data.data.getWorkflowJobFromDb;
+  } catch (error) {
+    throw new Error("Failed to fetch workflow jobs for user");
+  }
+};
+
+export const GET_WORKFLOW_RUN = gql`
+  subscription {
+    newWorkflowRun {
+      title
+      url
+      createdAt
+      user_id
+      author_id
+      repo_id
+      repo_owner
+      repo_name
+      GitHubWorkflowJob
+      id
+      Status
+    }
+  }
+`;
+
+export const GET_WORKFLOW_JOB = gql`
+  subscription {
+    newWorkflowJob {
+      title
+      url
+      createdAt
+      user_id
+      author_id
+      repo_id
+      repo_owner
+      repo_name
+      GitHubWorkflowJob
+      id
+      Status
+    }
+  }
+`;
 
 const AuthService = {
   signup,
@@ -317,6 +409,7 @@ const AuthService = {
   SearchPullRequests,
   SUBSCRIBE_PULL_REQUESTS,
   getCommitsForPullRequest,
+  SUBSCRIBE_COMMITS,
 };
 
 export default AuthService;

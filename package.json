@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@apollo/client": "^3.8.1",
+    "@fortawesome/fontawesome-free": "^6.4.2",
     "@primer/octicons-react": "^19.5.0",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",

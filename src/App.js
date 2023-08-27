@@ -9,7 +9,7 @@ import PullRequests from "./components/github_repo";
 import CommitPage from "./components/commits";
 import { ApolloProvider } from "@apollo/client";
 import { apolloClient } from "./auth/apolloClient";
-
+import GithubWorkflowPage from "./components/githubworkflow";
 
 function App() {
   return (
@@ -25,6 +25,7 @@ function App() {
               <Nav.Link as={Link} to="/signup">Signup</Nav.Link>
               <Nav.Link as={Link} to="/userlist">User List</Nav.Link>
               <Nav.Link as={Link} to="/getpullrequest">Github Pull Request</Nav.Link>
+              <Nav.Link as={Link} to="/getgithubworkflow">Github WorkFlow</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Navbar>
@@ -35,6 +36,7 @@ function App() {
           <Route path="/userlist" element={<UserList />} />
           <Route path="/getpullrequest" element={<PullRequests />} />
           <Route path="/commits" element={<CommitPage/>} />
+          <Route path="/getgithubworkflow" element={<GithubWorkflowPage/>} />
         </Routes>
       </div>
     </Router>
