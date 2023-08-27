@@ -372,7 +372,7 @@ export const GET_WORKFLOW_RUN = gql`
       repo_id
       repo_owner
       repo_name
-      GitHubWorkflowRun
+      GitHubWorkflowJob
       id
       Status
     }
