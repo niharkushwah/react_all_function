@@ -52,15 +52,14 @@ const GitHubWorkflowPage = () => {
   
   useEffect(() => {
     if (WorkFlowDataRun) {
-      setWorkflowRuns(WorkFlowDataRun.newWorkflowRun);
+      setWorkflowRuns([...workflowRuns, WorkFlowDataRun.newWorkflowRun]);
     }
     if (WorkFlowDataJob) {
-      setWorkflowJobs(WorkFlowDataJob.newWorkflowJob);
-    }
-    else {
+      setWorkflowJobs([...workflowJobs, WorkFlowDataJob.newWorkflowJob]);
+    } else {
       fetchData();
     }
-  }, []);
+  }, [WorkFlowDataRun, WorkFlowDataJob]);
     
 
   return (
