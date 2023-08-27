@@ -15,12 +15,10 @@ const GitHubWorkflowPage = () => {
   const [workflowRuns, setWorkflowRuns] = useState([]);
   const [workflowJobs, setWorkflowJobs] = useState([]);
 
-  
   const fetchData = async () => {
     try {
       const runsResponse = await getWorkflowRunFromDb(user);
       const jobsResponse = await getWorkflowJobfromDb(user);
-      
       setWorkflowRuns(runsResponse);
       setWorkflowJobs(jobsResponse);
     } catch (error) {
@@ -29,60 +27,46 @@ const GitHubWorkflowPage = () => {
   };
 
   const fetchRun = async () => {
-    try{
+    try {
       const runsResponse = await getWorkflowRunFromDb(user);
-    
       setWorkflowRuns(runsResponse);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
-
   };
 
   const fetchJob = async () => {
-    try{
+    try {
       const jobsResponse = await getWorkflowJobfromDb(user);
-
       setWorkflowJobs(jobsResponse);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-
-
   const handleTitleClick = (event, url) => {
     event.stopPropagation();
     window.open(url, "_blank");
   };
-  
+
   const handleRepoClick = (event, url) => {
     event.stopPropagation();
     window.open(url, "_blank");
   };
-  
+
   const { data: WorkFlowDataJob } = useSubscription(GET_WORKFLOW_JOB, {
     client: apolloClient,
   });
-  
+
   console.log("WorkFlowDataJob", WorkFlowDataJob);
-  
+
   const { data: WorkFlowDataRun } = useSubscription(GET_WORKFLOW_RUN, {
     client: apolloClient,
   });
-  
-  console.log("WorkFlowDataRun", WorkFlowDataRun);
-  
-  useEffect(() => {
-    // if (WorkFlowDataRun) {
-    //   setWorkflowRuns([WorkFlowDataRun.newWorkflowRun]);
-    // }
-    // if (WorkFlowDataJob) {
-    //   setWorkflowJobs([WorkFlowDataJob.newWorkflowJob]);
-    // } else {
-    //   fetchData();
-    // }
 
+  console.log("WorkFlowDataRun", WorkFlowDataRun);
+
+  useEffect(() => {
     if (WorkFlowDataRun) {
       fetchRun();
     }
@@ -92,7 +76,6 @@ const GitHubWorkflowPage = () => {
       fetchData();
     }
   }, [WorkFlowDataRun, WorkFlowDataJob]);
-    
 
   return (
     <div>
