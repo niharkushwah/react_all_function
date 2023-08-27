@@ -15,15 +15,12 @@ const GitHubWorkflowPage = () => {
   const [workflowRuns, setWorkflowRuns] = useState([]);
   const [workflowJobs, setWorkflowJobs] = useState([]);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
+  
   const fetchData = async () => {
     try {
       const runsResponse = await getWorkflowRunFromDb(user);
       const jobsResponse = await getWorkflowJobfromDb(user);
-
+      
       setWorkflowRuns(runsResponse);
       setWorkflowJobs(jobsResponse);
     } catch (error) {
@@ -35,27 +32,36 @@ const GitHubWorkflowPage = () => {
     event.stopPropagation();
     window.open(url, "_blank");
   };
-
+  
   const handleRepoClick = (event, url) => {
     event.stopPropagation();
     window.open(url, "_blank");
   };
-
-  const { data: subscriptionData } = useSubscription(GET_WORKFLOW_RUN, {
+  
+  const { data: WorkFlowDataJob } = useSubscription(GET_WORKFLOW_RUN, {
     client: apolloClient,
   });
-
-  console.log("subscriptionData", subscriptionData);
-
-  const { data: subscriptionData2 } = useSubscription(GET_WORKFLOW_JOB, {
+  
+  console.log("subscriptionData", WorkFlowDataJob);
+  
+  const { data: WorkFlowDataRun } = useSubscription(GET_WORKFLOW_JOB, {
     client: apolloClient,
   });
-
-  console.log("subscriptionData2", subscriptionData2);
+  
+  console.log("subscriptionData2", WorkFlowDataRun);
+  
+  useEffect(() => {
+    if (WorkFlowDataRun) {
+      setWorkflowRuns(WorkFlowDataRun);
+    }
+    if (WorkFlowDataJob) {
+      setWorkflowJobs(WorkFlowDataJob);
+    }
+  }, [WorkFlowDataRun, WorkFlowDataJob]);
+    
 
   return (
     <div>
-      {/* show in best style Github Workflow */}
       <Alert variant="success">
         <h2 className="text-center">GitHub Workflow</h2>
         <p className="text-center">
