@@ -361,6 +361,42 @@ export const getWorkflowJobfromDb = async (user, repo_name) => {
   }
 }
 
+export const GET_WORKFLOW_RUN = gql`
+  subscription {
+    newWorkflowRun {
+      title
+      url
+      createdAt
+      user_id
+      author_id
+      repo_id
+      repo_owner
+      repo_name
+      GitHubWorkflowJob
+      id
+      Status
+    }
+  }
+`;
+
+export const GET_WORKFLOW_JOB = gql`
+  subscription {
+    newWorkflowJob {
+      title
+      url
+      createdAt
+      user_id
+      author_id
+      repo_id
+      repo_owner
+      repo_name
+      GitHubWorkflowJob
+      id
+      Status
+    }
+  }
+`;
+
 
 const AuthService = {
   signup,

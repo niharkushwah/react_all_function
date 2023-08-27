@@ -6,6 +6,9 @@ import {
 } from "../auth/auth.service";
 import dayjs from "dayjs";
 import "@fortawesome/fontawesome-free/css/all.css";
+import { apolloClient } from "../auth/apolloClient";
+import { useSubscription } from "@apollo/client";
+import { GET_WORKFLOW_RUN, GET_WORKFLOW_JOB } from "../auth/auth.service";
 
 const GitHubWorkflowPage = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -38,6 +41,18 @@ const GitHubWorkflowPage = () => {
     window.open(url, "_blank");
   };
 
+  const { data: subscriptionData } = useSubscription(GET_WORKFLOW_RUN, {
+    client: apolloClient,
+  });
+
+  console.log("subscriptionData", subscriptionData);
+
+  const { data: subscriptionData2 } = useSubscription(GET_WORKFLOW_JOB, {
+    client: apolloClient,
+  });
+
+  console.log("subscriptionData2", subscriptionData2);
+
   return (
     <div>
       {/* show in best style Github Workflow */}
@@ -54,7 +69,7 @@ const GitHubWorkflowPage = () => {
       <div>
         <Alert variant="warning">
           <h3 className="text-center">GitHub Workflow Runs</h3>"
-          <p class="text-center">
+          <p className="text-center">
             <strong>GitHub Workflow Runs</strong> is an open-source CI/CD
             solution automating software development workflows for consistent
             deployment in diverse environments.
@@ -124,7 +139,7 @@ const GitHubWorkflowPage = () => {
                 <td>
                   {run.Status === "queued" && (
                     <div>
-                      <i class="fa-regular fa-clock"></i>{" "}
+                      <i className="fa-regular fa-clock"></i>{" "}
                     </div>
                   )}
                   {run.Status === "in_progress" && (
@@ -179,12 +194,12 @@ const GitHubWorkflowPage = () => {
 
       <div>
         <Alert variant="warning">
-            <h3 className="text-center">GitHub Workflow Jobs</h3>"
-            <p class="text-center">
-                <strong>GitHub Workflow Jobs</strong> is an open-source CI/CD
-                solution automating software development workflows for consistent
-                deployment in diverse environments.
-            </p>
+          <h3 className="text-center">GitHub Workflow Jobs</h3>"
+          <p className="text-center">
+            <strong>GitHub Workflow Jobs</strong> is an open-source CI/CD
+            solution automating software development workflows for consistent
+            deployment in diverse environments.
+          </p>
         </Alert>
 
         <Table striped hover>
@@ -250,7 +265,7 @@ const GitHubWorkflowPage = () => {
                 <td>
                   {job.Status === "queued" && (
                     <div>
-                      <i class="fa-regular fa-clock"></i>{" "}
+                      <i className="fa-regular fa-clock"></i>{" "}
                     </div>
                   )}
                   {job.Status === "in_progress" && (
