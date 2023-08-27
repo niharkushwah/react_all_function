@@ -57,6 +57,9 @@ const GitHubWorkflowPage = () => {
     if (WorkFlowDataJob) {
       setWorkflowJobs(WorkFlowDataJob);
     }
+    else {
+      fetchData();
+    }
   }, [WorkFlowDataRun, WorkFlowDataJob]);
     
 
