@@ -91,7 +91,7 @@ const GitHubWorkflowPage = () => {
 
       <div>
         <Alert variant="warning">
-          <h3 className="text-center">GitHub Workflow Runs</h3>"
+          <h3 className="text-center">GitHub Workflow Runs</h3>
           <p className="text-center">
             <strong>GitHub Workflow Runs</strong> is an open-source CI/CD
             solution automating software development workflows for consistent
@@ -217,7 +217,7 @@ const GitHubWorkflowPage = () => {
 
       <div>
         <Alert variant="warning">
-          <h3 className="text-center">GitHub Workflow Jobs</h3>"
+          <h3 className="text-center">GitHub Workflow Jobs</h3>
           <p className="text-center">
             <strong>GitHub Workflow Jobs</strong> is an open-source CI/CD
             solution automating software development workflows for consistent
