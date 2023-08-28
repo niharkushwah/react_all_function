@@ -28,6 +28,7 @@ const GitHubWorkflowPage = () => {
       console.error("Error fetching data:", error);
     }
   };
+  console.log("workflowRuns", workflowRuns);
 
   const handleTitleClick = (event, url) => {
     event.stopPropagation();
@@ -52,6 +53,25 @@ const GitHubWorkflowPage = () => {
       fetchData();
     }
   }, [WorkFlowDataRun]);
+
+  const handleCommitClick = (event, commit, url) => {
+    event.stopPropagation();
+    window.open(url + "/commit/" + commit.id);
+  };
+
+
+  const removeApiAndRepoFromUrl = (url) => {
+    const modifiedUrl = url
+      .replace("https://api.", "https://")
+      .replace("/repos/", "/")
+      .replace("/pulls/", "/pull/");
+    return modifiedUrl;
+  };
+
+  const handlePullClick = (event, url) => {
+    event.stopPropagation();
+    window.open(removeApiAndRepoFromUrl(url), "_blank");
+  };
 
   return (
     <div>
@@ -80,6 +100,8 @@ const GitHubWorkflowPage = () => {
             <tr>
               <th>Title</th>
               <th>Repository</th>
+              <th>Pull Request</th>
+              <th>Commit</th>
               <th>Created At</th>
               <th>Status</th>
             </tr>
@@ -89,7 +111,12 @@ const GitHubWorkflowPage = () => {
               <tr key={index}>
                 <td>
                   <div
-                    onClick={(event) => handleTitleClick(event, run.url)}
+                    onClick={(event) =>
+                      handleTitleClick(
+                        event,
+                        run.GitHubWorkflowJob.workflow_run.html_url
+                      )
+                    }
                     style={{
                       cursor: "pointer",
                     }}
@@ -116,7 +143,10 @@ const GitHubWorkflowPage = () => {
                 </td>
                 <td
                   onClick={(event) =>
-                    handleRepoClick(event, run.GitHubWorkflowJob.repository.url)
+                    handleRepoClick(
+                      event,
+                      run.GitHubWorkflowJob.repository.html_url
+                    )
                   }
                   style={{
                     cursor: "pointer",
@@ -129,6 +159,65 @@ const GitHubWorkflowPage = () => {
                     {run.GitHubWorkflowJob.repository.name}
                   </span>
                 </td>
+                <td
+                  style={{
+                    cursor: "pointer",
+                    color: "#0366d6",
+                  }}
+                >
+                  {run.GitHubWorkflowJob.workflow_run.pull_requests.map(
+                    (pullRequest, index) => (
+                      <div
+                        key={index}
+                        onClick={(event) =>
+                          handlePullClick(event, pullRequest.url)
+                        }
+                        style={{ marginBottom: "8px" }}
+                      >
+                        <div>{pullRequest.head.ref}</div>
+                        <div
+                          className="text-muted"
+                          style={{ fontSize: "10px" }}
+                        >
+                          <span
+                            style={{
+                              backgroundColor: "#ADD8E6",
+                              borderRadius: "5px",
+                              padding: "2px 5px",
+                            }}
+                          >
+                            #{pullRequest.number}
+                          </span>
+                        </div>
+                      </div>
+                    )
+                  )}
+                </td>
+
+                <td
+                  onClick={(event) =>
+                    handleCommitClick(
+                      event,
+                      run.GitHubWorkflowJob.workflow_run.head_commit,
+                      run.GitHubWorkflowJob.repository.html_url
+
+                    )
+                  }
+                  style={{
+                    cursor: "pointer",
+                    color: "#0366d6",
+                  }}
+                >
+                  <span
+                    style={{ backgroundColor: "#ADD8E6", borderRadius: "5px" }}
+                  >
+                    {run.GitHubWorkflowJob.workflow_run.head_commit.id.slice(
+                      0,
+                      7
+                    )}
+                  </span>
+                </td>
+
                 <td
                   title={dayjs(run.createdAt).format("DD MMM YYYY HH:mm:ss")}
                   style={{ cursor: "pointer" }}

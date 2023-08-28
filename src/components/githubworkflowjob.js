@@ -89,7 +89,7 @@ const GitHubWorkflowPageJob = () => {
               <tr key={index}>
                 <td>
                   <div
-                    onClick={(event) => handleTitleClick(event, job.url)}
+                    onClick={(event) => handleTitleClick(event, job.GitHubWorkflowJob.workflow_job.html_url)}
                     style={{
                       cursor: "pointer",
                     }}
@@ -100,7 +100,7 @@ const GitHubWorkflowPageJob = () => {
                         textDecoration: "underline",
                       }}
                     >
-                      {job.title}
+                      {job.GitHubWorkflowJob.workflow_job.name}
                     </span>
                     <div className="text-muted" style={{ fontSize: "10px" }}>
                       <span
@@ -116,7 +116,7 @@ const GitHubWorkflowPageJob = () => {
                 </td>
                 <td
                   onClick={(event) =>
-                    handleRepoClick(event, job.GitHubWorkflowJob.repository.url)
+                    handleRepoClick(event, job.GitHubWorkflowJob.repository.html_url)
                   }
                   style={{
                     cursor: "pointer",
