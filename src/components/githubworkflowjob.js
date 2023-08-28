@@ -1,29 +1,29 @@
 import React, { useEffect, useState } from "react";
 import { Table, Alert } from "react-bootstrap";
-import { getWorkflowRunFromDb } from "../auth/auth.service";
+import { getWorkflowJobfromDb } from "../auth/auth.service";
 import dayjs from "dayjs";
 import "@fortawesome/fontawesome-free/css/all.css";
 import { apolloClient } from "../auth/apolloClient";
 import { useSubscription } from "@apollo/client";
-import { GET_WORKFLOW_RUN } from "../auth/auth.service";
+import { GET_WORKFLOW_RUN, GET_WORKFLOW_JOB } from "../auth/auth.service";
 
-const GitHubWorkflowPage = () => {
+const GitHubWorkflowPageJob = () => {
   const user = JSON.parse(localStorage.getItem("user"));
-  const [workflowRuns, setWorkflowRuns] = useState([]);
+  const [workflowJobs, setWorkflowJobs] = useState([]);
 
   const fetchData = async () => {
     try {
-      const runsResponse = await getWorkflowRunFromDb(user);
-      setWorkflowRuns(runsResponse);
+      const jobsResponse = await getWorkflowJobfromDb(user);
+      setWorkflowJobs(jobsResponse);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
   };
 
-  const fetchRun = async () => {
+  const fetchJob = async () => {
     try {
-      const runsResponse = await getWorkflowRunFromDb(user);
-      setWorkflowRuns(runsResponse);
+      const jobsResponse = await getWorkflowJobfromDb(user);
+      setWorkflowJobs(jobsResponse);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -39,19 +39,19 @@ const GitHubWorkflowPage = () => {
     window.open(url, "_blank");
   };
 
-  const { data: WorkFlowDataRun } = useSubscription(GET_WORKFLOW_RUN, {
+  const { data: WorkFlowDataJob } = useSubscription(GET_WORKFLOW_JOB, {
     client: apolloClient,
   });
 
-  console.log("WorkFlowDataRun", WorkFlowDataRun);
+  console.log("WorkFlowDataJob", WorkFlowDataJob);
 
   useEffect(() => {
-    if (WorkFlowDataRun) {
-      fetchRun();
+    if (WorkFlowDataJob) {
+      fetchJob();
     } else {
       fetchData();
     }
-  }, [WorkFlowDataRun]);
+  }, [WorkFlowDataJob]);
 
   return (
     <div>
@@ -67,9 +67,9 @@ const GitHubWorkflowPage = () => {
 
       <div>
         <Alert variant="warning">
-          <h3 className="text-center">GitHub Workflow Runs</h3>
+          <h3 className="text-center">GitHub Workflow Jobs</h3>
           <p className="text-center">
-            <strong>GitHub Workflow Runs</strong> is an open-source CI/CD
+            <strong>GitHub Workflow Jobs</strong> is an open-source CI/CD
             solution automating software development workflows for consistent
             deployment in diverse environments.
           </p>
@@ -85,11 +85,11 @@ const GitHubWorkflowPage = () => {
             </tr>
           </thead>
           <tbody>
-            {workflowRuns.map((run, index) => (
+            {workflowJobs.map((job, index) => (
               <tr key={index}>
                 <td>
                   <div
-                    onClick={(event) => handleTitleClick(event, run.url)}
+                    onClick={(event) => handleTitleClick(event, job.url)}
                     style={{
                       cursor: "pointer",
                     }}
@@ -100,7 +100,7 @@ const GitHubWorkflowPage = () => {
                         textDecoration: "underline",
                       }}
                     >
-                      {run.title}
+                      {job.title}
                     </span>
                     <div className="text-muted" style={{ fontSize: "10px" }}>
                       <span
@@ -109,14 +109,14 @@ const GitHubWorkflowPage = () => {
                           borderRadius: "5px",
                         }}
                       >
-                        # {run.id} synchronized by {run.repo_owner}
+                        # {job.id} synchronized by {job.repo_owner}
                       </span>
                     </div>
                   </div>
                 </td>
                 <td
                   onClick={(event) =>
-                    handleRepoClick(event, run.GitHubWorkflowJob.repository.url)
+                    handleRepoClick(event, job.GitHubWorkflowJob.repository.url)
                   }
                   style={{
                     cursor: "pointer",
@@ -126,22 +126,22 @@ const GitHubWorkflowPage = () => {
                   <span
                     style={{ backgroundColor: "#ADD8E6", borderRadius: "5px" }}
                   >
-                    {run.GitHubWorkflowJob.repository.name}
+                    {job.GitHubWorkflowJob.repository.name}
                   </span>
                 </td>
                 <td
-                  title={dayjs(run.createdAt).format("DD MMM YYYY HH:mm:ss")}
+                  title={dayjs(job.createdAt).format("DD MMM YYYY HH:mm:ss")}
                   style={{ cursor: "pointer" }}
                 >
-                  {dayjs(run.createdAt).locale("en").fromNow()}
+                  {dayjs(job.createdAt).locale("en").fromNow()}
                 </td>
                 <td>
-                  {run.Status === "queued" && (
+                  {job.Status === "queued" && (
                     <div>
                       <i className="fa-regular fa-clock"></i>{" "}
                     </div>
                   )}
-                  {run.Status === "in_progress" && (
+                  {job.Status === "in_progress" && (
                     <div>
                       <i
                         className="fas fa-circle-notch fa-spin"
@@ -149,8 +149,8 @@ const GitHubWorkflowPage = () => {
                       ></i>
                     </div>
                   )}
-                  {run.Status === "completed" &&
-                    run.GitHubWorkflowJob.workflow_run.conclusion ===
+                  {job.Status === "completed" &&
+                    job.GitHubWorkflowJob.workflow_job.conclusion ===
                       "success" && (
                       <div>
                         <i
@@ -159,8 +159,8 @@ const GitHubWorkflowPage = () => {
                         ></i>{" "}
                       </div>
                     )}
-                  {run.Status === "completed" &&
-                    run.GitHubWorkflowJob.workflow_run.conclusion ===
+                  {job.Status === "completed" &&
+                    job.GitHubWorkflowJob.workflow_job.conclusion ===
                       "failure" && (
                       <div>
                         <i
@@ -173,12 +173,12 @@ const GitHubWorkflowPage = () => {
 
                 <td>
                   <a
-                    href={run.GitHubWorkflowJob.sender.html_url}
+                    href={job.GitHubWorkflowJob.sender.html_url}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
                     <img
-                      src={run.GitHubWorkflowJob.sender.avatar_url}
+                      src={job.GitHubWorkflowJob.sender.avatar_url}
                       alt="Avatar"
                       className="rounded-circle"
                       style={{ height: "25px", width: "25px" }}
@@ -194,4 +194,4 @@ const GitHubWorkflowPage = () => {
   );
 };
 
-export default GitHubWorkflowPage;
+export default GitHubWorkflowPageJob;
