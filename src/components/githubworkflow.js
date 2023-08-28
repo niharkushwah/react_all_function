@@ -121,270 +121,75 @@ const GitHubWorkflowPage = () => {
   return (
     <div className="container-fluid">
       <Row>
-      <CDBSidebar textColor="white" backgroundColor="black"  style={{ flex: "0 0 auto", height: "auto" }}>
-        <CDBSidebarHeader prefix={<i className="fa fa-bars fa-large"></i>}>
-          <a
-            href="/getpullrequest"
-            className="text-decoration-none"
-            style={{ color: "inherit" }}
-          >
-            GitHub Workflow
-          </a>
-        </CDBSidebarHeader>
+        <CDBSidebar
+          textColor="white"
+          backgroundColor="black"
+          style={{ flex: "0 0 auto", height: "auto" }}
+        >
+          <CDBSidebarHeader prefix={<i className="fa fa-bars fa-large"></i>}>
+            <a
+              href="/getpullrequest"
+              className="text-decoration-none"
+              style={{ color: "inherit" }}
+            >
+              GitHub Workflow
+            </a>
+          </CDBSidebarHeader>
 
-        <CDBSidebarContent className="sidebar-content">
-          <CDBSidebarMenu>
-            <CDBSidebarMenuItem icon="columns" onClick={handleWorkflowRunClick}>
-              GithubWorkFlow Run
-            </CDBSidebarMenuItem>
-            <CDBSidebarMenuItem icon="table" onClick={handleWorkflowJobClick}>
-              GithubWorkFlow Job
-            </CDBSidebarMenuItem>
-          </CDBSidebarMenu>
-        </CDBSidebarContent>
-      </CDBSidebar>
+          <CDBSidebarContent className="sidebar-content">
+            <CDBSidebarMenu>
+              <CDBSidebarMenuItem
+                icon="columns"
+                onClick={handleWorkflowRunClick}
+                style={{
+                  color:
+                  showWorkflowRuns === false ? "white" : "yellow",
+                }}
+              >
+                GithubWorkFlow Run
+              </CDBSidebarMenuItem>
+              <CDBSidebarMenuItem icon="table" onClick={handleWorkflowJobClick} style={{
+                  color:
+                  showWorkflowJobs === false ? "white" : "yellow",
+                }}>
+                GithubWorkFlow Job
+              </CDBSidebarMenuItem>
+            </CDBSidebarMenu>
+          </CDBSidebarContent>
+        </CDBSidebar>
 
-
-      <div style={{ flex: 1, overflow: "auto", padding: "20px" }}>
-        {showWorkflowRuns && (
-          <div>
-            <Alert variant="warning">
-              <h3 className="text-center">GitHub Workflow Runs</h3>
-              <p className="text-center">
-                <strong>GitHub Workflow Runs</strong> is an open-source CI/CD
-                solution automating software development workflows for
-                consistent deployment in diverse environments.
-              </p>
-            </Alert>
+        <div style={{ flex: 1, overflow: "auto", padding: "20px" }}>
+          {showWorkflowRuns && (
             <div>
-              <Table striped hover>
-                <thead>
-                  <tr>
-                    <th>Title</th>
-                    <th>Repository</th>
-                    <th>Pull Request</th>
-                    <th>Commit</th>
-                    <th>Created At</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {workflowRuns.map((run, index) => (
-                    <tr key={index}>
-                      <td>
-                        <div
-                          onClick={(event) =>
-                            handleTitleClick(
-                              event,
-                              run.GitHubWorkflowJob.workflow_run.html_url
-                            )
-                          }
-                          style={{
-                            cursor: "pointer",
-                          }}
-                        >
-                          <span
-                            style={{
-                              color: "#0366d6",
-                              textDecoration: "underline",
-                            }}
-                          >
-                            {run.title}
-                          </span>
-                          <div
-                            className="text-muted"
-                            style={{ fontSize: "10px" }}
-                          >
-                            <span
-                              style={{
-                                backgroundColor: "#ADD8E6",
-                                borderRadius: "5px",
-                              }}
-                            >
-                              # {run.id} synchronized by {run.repo_owner}
-                            </span>
-                          </div>
-                        </div>
-                      </td>
-                      <td
-                        onClick={(event) =>
-                          handleRepoClick(
-                            event,
-                            run.GitHubWorkflowJob.repository.html_url
-                          )
-                        }
-                        style={{
-                          cursor: "pointer",
-                          color: "#0366d6",
-                        }}
-                      >
-                        <span
-                          style={{
-                            backgroundColor: "#ADD8E6",
-                            borderRadius: "5px",
-                          }}
-                        >
-                          {run.GitHubWorkflowJob.repository.name}
-                        </span>
-                      </td>
-                      <td
-                        style={{
-                          cursor: "pointer",
-                          color: "#0366d6",
-                        }}
-                      >
-                        {run.GitHubWorkflowJob.workflow_run.pull_requests.map(
-                          (pullRequest, index) => (
-                            <div
-                              key={index}
-                              onClick={(event) =>
-                                handlePullClick(event, pullRequest.url)
-                              }
-                              style={{ marginBottom: "8px" }}
-                            >
-                              <div>{pullRequest.head.ref}</div>
-                              <div
-                                className="text-muted"
-                                style={{ fontSize: "10px" }}
-                              >
-                                <span
-                                  style={{
-                                    backgroundColor: "#ADD8E6",
-                                    borderRadius: "5px",
-                                    padding: "2px 5px",
-                                  }}
-                                >
-                                  #{pullRequest.number}
-                                </span>
-                              </div>
-                            </div>
-                          )
-                        )}
-                      </td>
-
-                      <td
-                        onClick={(event) =>
-                          handleCommitClick(
-                            event,
-                            run.GitHubWorkflowJob.workflow_run.head_commit,
-                            run.GitHubWorkflowJob.repository.html_url
-                          )
-                        }
-                        style={{
-                          cursor: "pointer",
-                          color: "#0366d6",
-                        }}
-                      >
-                        <span
-                          style={{
-                            backgroundColor: "#ADD8E6",
-                            borderRadius: "5px",
-                          }}
-                        >
-                          {run.GitHubWorkflowJob.workflow_run.head_commit.id.slice(
-                            0,
-                            7
-                          )}
-                        </span>
-                      </td>
-
-                      <td
-                        title={dayjs(run.createdAt).format(
-                          "DD MMM YYYY HH:mm:ss"
-                        )}
-                        style={{ cursor: "pointer" }}
-                      >
-                        {dayjs(run.createdAt).locale("en").fromNow()}
-                      </td>
-                      <td>
-                        {run.Status === "queued" && (
-                          <div>
-                            <i className="fa-regular fa-clock"></i>{" "}
-                          </div>
-                        )}
-                        {run.Status === "in_progress" && (
-                          <div>
-                            <i
-                              className="fas fa-circle-notch fa-spin"
-                              style={{ color: "#b3ad00" }}
-                            ></i>
-                          </div>
-                        )}
-                        {run.Status === "completed" &&
-                          run.GitHubWorkflowJob.workflow_run.conclusion ===
-                            "success" && (
-                            <div>
-                              <i
-                                className="fa-regular fa-circle-check"
-                                style={{ color: "#2ad56c" }}
-                              ></i>{" "}
-                            </div>
-                          )}
-                        {run.Status === "completed" &&
-                          run.GitHubWorkflowJob.workflow_run.conclusion ===
-                            "failure" && (
-                            <div>
-                              <i
-                                className="far fa-times-circle"
-                                style={{ color: "#cb2431" }}
-                              ></i>{" "}
-                            </div>
-                          )}
-                      </td>
-
-                      <td>
-                        <a
-                          href={run.GitHubWorkflowJob.sender.html_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <img
-                            src={run.GitHubWorkflowJob.sender.avatar_url}
-                            alt="Avatar"
-                            className="rounded-circle"
-                            style={{ height: "25px", width: "25px" }}
-                          />
-                        </a>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </Table>
-            </div>
-          </div>
-        )}
-
-        {showWorkflowJobs && (
-          <div>
-            <Alert variant="warning">
-              <h3 className="text-center">GitHub Workflow Jobs</h3>
-              <p className="text-center">
-                <strong>GitHub Workflow Jobs</strong> is an open-source CI/CD
-                solution automating software development workflows for
-                consistent deployment in diverse environments.
-              </p>
-            </Alert>
-
-            <div>
+              <Alert variant="warning">
+                <h3 className="text-center">GitHub Workflow Runs</h3>
+                <p className="text-center">
+                  <strong>GitHub Workflow Runs</strong> is an open-source CI/CD
+                  solution automating software development workflows for
+                  consistent deployment in diverse environments.
+                </p>
+              </Alert>
               <div>
                 <Table striped hover>
                   <thead>
                     <tr>
                       <th>Title</th>
                       <th>Repository</th>
+                      <th>Pull Request</th>
+                      <th>Commit</th>
                       <th>Created At</th>
                       <th>Status</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {workflowJobs.map((job, index) => (
+                    {workflowRuns.map((run, index) => (
                       <tr key={index}>
                         <td>
                           <div
                             onClick={(event) =>
                               handleTitleClick(
                                 event,
-                                job.GitHubWorkflowJob.workflow_job.html_url
+                                run.GitHubWorkflowJob.workflow_run.html_url
                               )
                             }
                             style={{
@@ -397,7 +202,7 @@ const GitHubWorkflowPage = () => {
                                 textDecoration: "underline",
                               }}
                             >
-                              {job.GitHubWorkflowJob.workflow_job.name}
+                              {run.title}
                             </span>
                             <div
                               className="text-muted"
@@ -409,7 +214,7 @@ const GitHubWorkflowPage = () => {
                                   borderRadius: "5px",
                                 }}
                               >
-                                # {job.id} synchronized by {job.repo_owner}
+                                # {run.id} synchronized by {run.repo_owner}
                               </span>
                             </div>
                           </div>
@@ -418,7 +223,7 @@ const GitHubWorkflowPage = () => {
                           onClick={(event) =>
                             handleRepoClick(
                               event,
-                              job.GitHubWorkflowJob.repository.html_url
+                              run.GitHubWorkflowJob.repository.html_url
                             )
                           }
                           style={{
@@ -432,24 +237,85 @@ const GitHubWorkflowPage = () => {
                               borderRadius: "5px",
                             }}
                           >
-                            {job.GitHubWorkflowJob.repository.name}
+                            {run.GitHubWorkflowJob.repository.name}
                           </span>
                         </td>
                         <td
-                          title={dayjs(job.createdAt).format(
+                          style={{
+                            cursor: "pointer",
+                            color: "#0366d6",
+                          }}
+                        >
+                          {run.GitHubWorkflowJob.workflow_run.pull_requests.map(
+                            (pullRequest, index) => (
+                              <div
+                                key={index}
+                                onClick={(event) =>
+                                  handlePullClick(event, pullRequest.url)
+                                }
+                                style={{ marginBottom: "8px" }}
+                              >
+                                <div>{pullRequest.head.ref}</div>
+                                <div
+                                  className="text-muted"
+                                  style={{ fontSize: "10px" }}
+                                >
+                                  <span
+                                    style={{
+                                      backgroundColor: "#ADD8E6",
+                                      borderRadius: "5px",
+                                      padding: "2px 5px",
+                                    }}
+                                  >
+                                    #{pullRequest.number}
+                                  </span>
+                                </div>
+                              </div>
+                            )
+                          )}
+                        </td>
+
+                        <td
+                          onClick={(event) =>
+                            handleCommitClick(
+                              event,
+                              run.GitHubWorkflowJob.workflow_run.head_commit,
+                              run.GitHubWorkflowJob.repository.html_url
+                            )
+                          }
+                          style={{
+                            cursor: "pointer",
+                            color: "#0366d6",
+                          }}
+                        >
+                          <span
+                            style={{
+                              backgroundColor: "#ADD8E6",
+                              borderRadius: "5px",
+                            }}
+                          >
+                            {run.GitHubWorkflowJob.workflow_run.head_commit.id.slice(
+                              0,
+                              7
+                            )}
+                          </span>
+                        </td>
+
+                        <td
+                          title={dayjs(run.createdAt).format(
                             "DD MMM YYYY HH:mm:ss"
                           )}
                           style={{ cursor: "pointer" }}
                         >
-                          {dayjs(job.createdAt).locale("en").fromNow()}
+                          {dayjs(run.createdAt).locale("en").fromNow()}
                         </td>
                         <td>
-                          {job.Status === "queued" && (
+                          {run.Status === "queued" && (
                             <div>
                               <i className="fa-regular fa-clock"></i>{" "}
                             </div>
                           )}
-                          {job.Status === "in_progress" && (
+                          {run.Status === "in_progress" && (
                             <div>
                               <i
                                 className="fas fa-circle-notch fa-spin"
@@ -457,8 +323,8 @@ const GitHubWorkflowPage = () => {
                               ></i>
                             </div>
                           )}
-                          {job.Status === "completed" &&
-                            job.GitHubWorkflowJob.workflow_job.conclusion ===
+                          {run.Status === "completed" &&
+                            run.GitHubWorkflowJob.workflow_run.conclusion ===
                               "success" && (
                               <div>
                                 <i
@@ -467,8 +333,8 @@ const GitHubWorkflowPage = () => {
                                 ></i>{" "}
                               </div>
                             )}
-                          {job.Status === "completed" &&
-                            job.GitHubWorkflowJob.workflow_job.conclusion ===
+                          {run.Status === "completed" &&
+                            run.GitHubWorkflowJob.workflow_run.conclusion ===
                               "failure" && (
                               <div>
                                 <i
@@ -481,12 +347,12 @@ const GitHubWorkflowPage = () => {
 
                         <td>
                           <a
-                            href={job.GitHubWorkflowJob.sender.html_url}
+                            href={run.GitHubWorkflowJob.sender.html_url}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
                             <img
-                              src={job.GitHubWorkflowJob.sender.avatar_url}
+                              src={run.GitHubWorkflowJob.sender.avatar_url}
                               alt="Avatar"
                               className="rounded-circle"
                               style={{ height: "25px", width: "25px" }}
@@ -499,9 +365,156 @@ const GitHubWorkflowPage = () => {
                 </Table>
               </div>
             </div>
-          </div>
-        )}
-      </div>
+          )}
+
+          {showWorkflowJobs && (
+            <div>
+              <Alert variant="warning">
+                <h3 className="text-center">GitHub Workflow Jobs</h3>
+                <p className="text-center">
+                  <strong>GitHub Workflow Jobs</strong> is an open-source CI/CD
+                  solution automating software development workflows for
+                  consistent deployment in diverse environments.
+                </p>
+              </Alert>
+
+              <div>
+                <div>
+                  <Table striped hover>
+                    <thead>
+                      <tr>
+                        <th>Title</th>
+                        <th>Repository</th>
+                        <th>Created At</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {workflowJobs.map((job, index) => (
+                        <tr key={index}>
+                          <td>
+                            <div
+                              onClick={(event) =>
+                                handleTitleClick(
+                                  event,
+                                  job.GitHubWorkflowJob.workflow_job.html_url
+                                )
+                              }
+                              style={{
+                                cursor: "pointer",
+                              }}
+                            >
+                              <span
+                                style={{
+                                  color: "#0366d6",
+                                  textDecoration: "underline",
+                                }}
+                              >
+                                {job.GitHubWorkflowJob.workflow_job.name}
+                              </span>
+                              <div
+                                className="text-muted"
+                                style={{ fontSize: "10px" }}
+                              >
+                                <span
+                                  style={{
+                                    backgroundColor: "#ADD8E6",
+                                    borderRadius: "5px",
+                                  }}
+                                >
+                                  # {job.id} synchronized by {job.repo_owner}
+                                </span>
+                              </div>
+                            </div>
+                          </td>
+                          <td
+                            onClick={(event) =>
+                              handleRepoClick(
+                                event,
+                                job.GitHubWorkflowJob.repository.html_url
+                              )
+                            }
+                            style={{
+                              cursor: "pointer",
+                              color: "#0366d6",
+                            }}
+                          >
+                            <span
+                              style={{
+                                backgroundColor: "#ADD8E6",
+                                borderRadius: "5px",
+                              }}
+                            >
+                              {job.GitHubWorkflowJob.repository.name}
+                            </span>
+                          </td>
+                          <td
+                            title={dayjs(job.createdAt).format(
+                              "DD MMM YYYY HH:mm:ss"
+                            )}
+                            style={{ cursor: "pointer" }}
+                          >
+                            {dayjs(job.createdAt).locale("en").fromNow()}
+                          </td>
+                          <td>
+                            {job.Status === "queued" && (
+                              <div>
+                                <i className="fa-regular fa-clock"></i>{" "}
+                              </div>
+                            )}
+                            {job.Status === "in_progress" && (
+                              <div>
+                                <i
+                                  className="fas fa-circle-notch fa-spin"
+                                  style={{ color: "#b3ad00" }}
+                                ></i>
+                              </div>
+                            )}
+                            {job.Status === "completed" &&
+                              job.GitHubWorkflowJob.workflow_job.conclusion ===
+                                "success" && (
+                                <div>
+                                  <i
+                                    className="fa-regular fa-circle-check"
+                                    style={{ color: "#2ad56c" }}
+                                  ></i>{" "}
+                                </div>
+                              )}
+                            {job.Status === "completed" &&
+                              job.GitHubWorkflowJob.workflow_job.conclusion ===
+                                "failure" && (
+                                <div>
+                                  <i
+                                    className="far fa-times-circle"
+                                    style={{ color: "#cb2431" }}
+                                  ></i>{" "}
+                                </div>
+                              )}
+                          </td>
+
+                          <td>
+                            <a
+                              href={job.GitHubWorkflowJob.sender.html_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              <img
+                                src={job.GitHubWorkflowJob.sender.avatar_url}
+                                alt="Avatar"
+                                className="rounded-circle"
+                                style={{ height: "25px", width: "25px" }}
+                              />
+                            </a>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </Row>
     </div>
   );
