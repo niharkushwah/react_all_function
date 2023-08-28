@@ -25,7 +25,7 @@ function App() {
               <Nav.Link as={Link} to="/signup">Signup</Nav.Link>
               <Nav.Link as={Link} to="/userlist">User List</Nav.Link>
               <Nav.Link as={Link} to="/getpullrequest">Github Pull Request</Nav.Link>
-              <Nav.Link as={Link} to="/getgithubworkflow">Github WorkFlow</Nav.Link>
+              <Nav.Link as={Link} to="/action">Action</Nav.Link>
             </Nav>
           </Navbar.Collapse>
         </Navbar>
@@ -36,7 +36,7 @@ function App() {
           <Route path="/userlist" element={<UserList />} />
           <Route path="/getpullrequest" element={<PullRequests />} />
           <Route path="/commits" element={<CommitPage/>} />
-          <Route path="/getgithubworkflow" element={<GithubWorkflowPage/>} />
+          <Route path="/action" element={<GithubWorkflowPage/>} />
         </Routes>
       </div>
     </Router>
