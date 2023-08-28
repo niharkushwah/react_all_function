@@ -22,7 +22,7 @@ const GitHubWorkflowPage = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const [workflowRuns, setWorkflowRuns] = useState([]);
   const [workflowJobs, setWorkflowJobs] = useState([]);
-  const [showWorkflowRuns, setShowWorkflowRuns] = useState(false);
+  const [showWorkflowRuns, setShowWorkflowRuns] = useState(true);
   const [showWorkflowJobs, setShowWorkflowJobs] = useState(false);
 
   const fetchData = async () => {
@@ -119,12 +119,12 @@ const GitHubWorkflowPage = () => {
   };
 
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
+    <div className="container-fluid">
       <Row>
-      <CDBSidebar textColor="#fff" backgroundColor="#333" style={{ flex: "0 0 auto" }}>
+      <CDBSidebar textColor="white" backgroundColor="black"  style={{ flex: "0 0 auto", height: "auto" }}>
         <CDBSidebarHeader prefix={<i className="fa fa-bars fa-large"></i>}>
           <a
-            href="/"
+            href="/getpullrequest"
             className="text-decoration-none"
             style={{ color: "inherit" }}
           >
@@ -135,10 +135,10 @@ const GitHubWorkflowPage = () => {
         <CDBSidebarContent className="sidebar-content">
           <CDBSidebarMenu>
             <CDBSidebarMenuItem icon="columns" onClick={handleWorkflowRunClick}>
-              Github WorkFlow Runs
+              GithubWorkFlow Run
             </CDBSidebarMenuItem>
             <CDBSidebarMenuItem icon="table" onClick={handleWorkflowJobClick}>
-              Github WorkFlow Job
+              GithubWorkFlow Job
             </CDBSidebarMenuItem>
           </CDBSidebarMenu>
         </CDBSidebarContent>
