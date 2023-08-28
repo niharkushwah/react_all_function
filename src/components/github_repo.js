@@ -258,7 +258,7 @@ const PullRequests = () => {
                   onClick={() => handleRowClick(item)}
                   style={{ cursor: "pointer" }}
                 >
-                  <i className="fa fa-chevron-right btn btn-warning">Commits</i>
+                  <i className="fa btn btn-warning">Commits</i>
                 </td>
               </tr>
             ))}
