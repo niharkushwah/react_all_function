@@ -276,6 +276,7 @@ export const SUBSCRIBE_PULL_REQUESTS = gql`
       user_id
       author_id
       github_pull_metadata
+      commits
     }
   }
 `;
