@@ -519,5 +519,4 @@ const GitHubWorkflowPage = () => {
     </div>
   );
 };
-
 export default GitHubWorkflowPage;
