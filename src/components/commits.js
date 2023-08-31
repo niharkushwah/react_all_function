@@ -44,9 +44,9 @@ const CommitPage = () => {
     window.open(url, "_blank");
   };
 
-  const handleBranchClick = (event, username, repo_name, baseRefName) => {
+  const handleBranchClick = (event, userName, repoName, baseRefName) => {
     event.stopPropagation();
-    const branchUrl = `https://github.com/${username}/${repo_name}/tree/${baseRefName}`;
+    const branchUrl = `https://github.com/${userName}/${repoName}/tree/${baseRefName}`;
     window.open(branchUrl, "_blank");
   };
 

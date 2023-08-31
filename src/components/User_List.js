@@ -12,7 +12,7 @@ function UserList() {
   const [selectedUser, setSelectedUser] = useState({});
   const [updatedName, setUpdatedName] = useState("");
   const [updatedAge, setUpdatedAge] = useState("");
-  const [updatedUsername, setUpdatedUsername] = useState("");
+  const [updateduserName, setUpdateduserName] = useState("");
   const [ageError, setAgeError] = useState("");
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
@@ -28,7 +28,7 @@ function UserList() {
     setSelectedUser({});
     setUpdatedName("");
     setUpdatedAge("");
-    setUpdatedUsername("");
+    setUpdateduserName("");
     setAgeError("");
   };
 
@@ -41,7 +41,7 @@ function UserList() {
     setSelectedUser(user);
     setUpdatedName(user.name);
     setUpdatedAge(user.age);
-    setUpdatedUsername(user.username);
+    setUpdateduserName(user.userName);
     setShowEditModal(true);
   };
 
@@ -68,7 +68,7 @@ function UserList() {
         name: updatedName,
         age: parseInt(updatedAge),
         email: selectedUser.email,
-        username: updatedUsername,
+        userName: updateduserName,
       };
 
       const updatedUser = await updateUser(selectedUser.email, payload);
@@ -124,7 +124,7 @@ function UserList() {
           <tr>
             <th>Name</th>
             <th>Email</th>
-            <th>Username</th>
+            <th>userName</th>
             <th>Age</th>
             <th>Address</th>
             <th>Actions</th>
@@ -135,7 +135,7 @@ function UserList() {
             <tr key={user._id}>
               <td>{user.name}</td>
               <td>{user.email}</td>
-              <td>{user.username}</td>
+              <td>{user.userName}</td>
               <td>{user.age}</td>
               <td>
                 {user.address.mainAddress}, {user.address.city},{" "}
@@ -183,11 +183,11 @@ function UserList() {
             {ageError && <p className="text-danger">{ageError}</p>}
           </Form.Group>
           <Form.Group>
-            <Form.Label>Username</Form.Label>
+            <Form.Label>userName</Form.Label>
             <Form.Control
               type="text"
-              value={updatedUsername}
-              onChange={(e) => setUpdatedUsername(e.target.value)}
+              value={updateduserName}
+              onChange={(e) => setUpdateduserName(e.target.value)}
             />
           </Form.Group>
         </Modal.Body>

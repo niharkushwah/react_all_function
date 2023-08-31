@@ -17,7 +17,7 @@ const Signup = () => {
     city: "",
     pincode: "",
     name: "",
-    username: "",
+    userName: "",
     selectedCountry: null,
   });
 
@@ -33,7 +33,7 @@ const Signup = () => {
     city: "",
     pincode: "",
     name: "",
-    username: "",
+    userName: "",
     countryCode: "",
   });
 
@@ -66,7 +66,7 @@ const Signup = () => {
       city,
       pincode,
       name,
-      username,
+      userName,
       selectedCountry,
     } = formData;
 
@@ -80,7 +80,7 @@ const Signup = () => {
       "city",
       "pincode",
       "name",
-      "username",
+      "userName",
       "selectedCountry",
     ];
 
@@ -111,7 +111,7 @@ const Signup = () => {
         ? "Pincode should be a 6-digit number."
         : "",
       name: !name ? "Name is required." : "",
-      username: !username ? "Username is required." : "",
+      userName: !userName ? "userName is required." : "",
       countryCode: selectedCountry ? "" : "Country code is required.",
     });
 
@@ -131,7 +131,7 @@ const Signup = () => {
     try {
       const data = {
         name,
-        username,
+        userName,
         email,
         password,
         age,
@@ -216,23 +216,23 @@ const Signup = () => {
         </div>
 
         <div className="mb-3">
-          <label htmlFor="username" className="form-label">
-            Username
+          <label htmlFor="userName" className="form-label">
+            userName
           </label>
           <input
             type="text"
-            id="username"
+            id="userName"
             className={`form-control ${
-              formErrors.username ? "is-invalid" : ""
+              formErrors.userName ? "is-invalid" : ""
             }`}
-            placeholder="Enter username"
-            name="username"
-            value={formData.username}
+            placeholder="Enter userName"
+            name="userName"
+            value={formData.userName}
             onChange={handleInputChange}
             required
           />
-          {formErrors.username && (
-            <div className="invalid-feedback">{formErrors.username}</div>
+          {formErrors.userName && (
+            <div className="invalid-feedback">{formErrors.userName}</div>
           )}
         </div>
 

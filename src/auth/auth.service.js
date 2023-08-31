@@ -20,7 +20,7 @@ const signup = async (payload) => {
   console.log(payload, "payload");
   const {
     name,
-    username,
+    userName,
     age,
     mobileNumber,
     countryCode,
@@ -38,7 +38,7 @@ const signup = async (payload) => {
           createUser(
             payload: {
               name: "${name}",
-              username: "${username}",
+              userName: "${userName}",
               age: ${age},
               mobileNumber: ${mobileNumber},
               countryCode: "${countryCode}",
@@ -52,7 +52,7 @@ const signup = async (payload) => {
             }
           ) {
             name
-            username
+            userName
             email
             address {
               mainAddress
@@ -80,7 +80,7 @@ export const fetchUsers = async (role, minAge, maxAge) => {
           findAllUser(role: "${role}", minAge: ${minAge}, maxAge: ${maxAge}) {
             _id
             name
-            username
+            userName
             email
             age
             address {
@@ -125,12 +125,11 @@ export const updateUser = async (email, payload) => {
           updateUser(email: "${email}", payload: {
             name: "${payload.name}",
             age: ${payload.age},
-            username: "${payload.username}",
-            
+            userName: "${payload.userName}",
           }) {
             name
             age
-            username
+            userName
           }
         }
       `,
@@ -186,49 +185,47 @@ export const githubCodeExchange = async (code) => {
       query: `
       mutation {
         githubCodeExchange(code: "${code}") {
-          token_type
-          access_token
-          refresh_token
-          expires_in
-          username
+          tokenType
+          accessToken
+          refreshToken
+          expiresIn
+          userName
         }
       }
       `,
     });
-
     localStorage.setItem(
       "user",
-      JSON.stringify(response.data.data.githubCodeExchange.username)
+      JSON.stringify(response.data.data.githubCodeExchange.userName)
     );
-    return response.data.data.githubCodeExchange.username;
+    return response.data.data.githubCodeExchange.userName;
   } catch (error) {
     console.error("Error in githubCodeExchange:", error);
     throw new Error("Failed to exchange GitHub code for access token");
   }
 };
 
-export const getPullRequestsForUser = async (username) => {
+export const getPullRequestsForUser = async (userName) => {
   try {
     const response = await axios.post(API_URL, {
       query: `
         query {
-          getPullRequestFromDb(username: "${username}") {
+          getPullRequestFromDb(userName: "${userName}") {
             title
             url
             number
-            repo_owner
-            repo_name
+            repoOwner
+            repoName
             createdAt
-            repo_id
-            user_id
-            author_id
-            github_pull_metadata
+            repoId
+            userId
+            authorId
+            githubPullMetadata
             commits
           }
         }
       `,
     });
-
     console.log(response, "response");
     return response.data.data.getPullRequestFromDb;
   } catch (error) {
@@ -236,22 +233,22 @@ export const getPullRequestsForUser = async (username) => {
   }
 };
 
-export const SearchPullRequests = async (searchKeyword, username) => {
+export const SearchPullRequests = async (searchKeyword, userName) => {
   try {
     const response = await axios.post(API_URL, {
       query: `
         query {
-          searchPullRequests(searchKeyword: "${searchKeyword}" username: "${username}") {
+          searchPullRequests(searchKeyword: "${searchKeyword}" userName: "${userName}") {
             title
             url
             number
-            repo_owner
-            repo_name
+            repoOwner
+            repoName
             createdAt
-            repo_id
-            user_id
-            author_id
-            github_pull_metadata
+            repoId
+            userId
+            authorId
+            githubPullMetadata
           }
         }
       `,
@@ -269,13 +266,13 @@ export const SUBSCRIBE_PULL_REQUESTS = gql`
       title
       url
       number
-      repo_owner
-      repo_name
+      repoOwner
+      repoName
       createdAt
-      repo_id
-      user_id
-      author_id
-      github_pull_metadata
+      repoId
+      userId
+      authorId
+      githubPullMetadata
       commits
     }
   }
@@ -289,12 +286,12 @@ export const SUBSCRIBE_COMMITS = gql`
   }
 `;
 
-export const getCommitsForPullRequest = async (user, url, repo_name) => {
+export const getCommitsForPullRequest = async (user, url, repoName) => {
   try {
     const response = await axios.post(API_URL, {
       query: `
         query {
-          getCommitsForPullRequest(username: "${user}", url: "${url}", repo_name: "${repo_name}") {
+          getCommitsForPullRequest(userName: "${user}", url: "${url}", repoName: "${repoName}") {
             commits
           }
         }
@@ -307,6 +304,7 @@ export const getCommitsForPullRequest = async (user, url, repo_name) => {
     return response.data.data.getCommitsForPullRequest.commits.nodes;
   } catch (error) {
     throw new Error("Failed to fetch commits for pull request");
+    console.log(error, "error");
   }
 };
 
@@ -315,15 +313,15 @@ export const getWorkflowRunFromDb = async (user) => {
     const response = await axios.post(API_URL, {
       query: `
         query {
-          getWorkflowRunFromDb(username: "${user}") {
+          getWorkflowRunFromDb(userName: "${user}") {
             title
             url
             createdAt
-            user_id
-            author_id
-            repo_id
-            repo_owner
-            repo_name
+            userId
+            authorId
+            repoId
+            repoOwner
+            repoName
             GitHubWorkflowJob
             id
             Status
@@ -337,20 +335,20 @@ export const getWorkflowRunFromDb = async (user) => {
   }
 };
 
-export const getWorkflowJobfromDb = async (user, repo_name) => {
+export const getWorkflowJobfromDb = async (user, repoName) => {
   try {
     const response = await axios.post(API_URL, {
       query: `
         query {
-          getWorkflowJobFromDb(username: "${user}") {
+          getWorkflowJobFromDb(userName: "${user}") {
             title
             url
             createdAt
-            user_id
-            author_id
-            repo_id
-            repo_owner
-            repo_name
+            userId
+            authorId
+            repoId
+            repoOwner
+            repoName
             GitHubWorkflowJob
             id
             Status
@@ -370,11 +368,11 @@ export const GET_WORKFLOW_RUN = gql`
       title
       url
       createdAt
-      user_id
-      author_id
-      repo_id
-      repo_owner
-      repo_name
+      userId
+      authorId
+      repoId
+      repoOwner
+      repoName
       GitHubWorkflowJob
       id
       Status
@@ -388,11 +386,11 @@ export const GET_WORKFLOW_JOB = gql`
       title
       url
       createdAt
-      user_id
-      author_id
-      repo_id
-      repo_owner
-      repo_name
+      userId
+      authorId
+      repoId
+      repoOwner
+      repoName
       GitHubWorkflowJob
       id
       Status
