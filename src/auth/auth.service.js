@@ -410,4 +410,5 @@ const AuthService = {
   getCommitsForPullRequest,
   SUBSCRIBE_COMMITS,
 };
+
 export default AuthService;
