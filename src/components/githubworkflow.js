@@ -214,7 +214,7 @@ const GitHubWorkflowPage = () => {
                                   borderRadius: "5px",
                                 }}
                               >
-                                # {run.id} synchronized by {run.repo_owner}
+                                # {run.id} synchronized by {run.repoOwner}
                               </span>
                             </div>
                           </div>
@@ -422,7 +422,7 @@ const GitHubWorkflowPage = () => {
                                     borderRadius: "5px",
                                   }}
                                 >
-                                  # {job.id} synchronized by {job.repo_owner}
+                                  # {job.id} synchronized by {job.repoOwner}
                                 </span>
                               </div>
                             </div>

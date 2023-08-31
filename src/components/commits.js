@@ -26,8 +26,6 @@ const CommitPage = () => {
   });
   console.log("data", data);
 
-  
-
   const filterCommits = (searchString) => {
     setSearchQuery(searchString);
     const lowerSearchString = searchString.toLowerCase();
@@ -46,14 +44,18 @@ const CommitPage = () => {
     window.open(url, "_blank");
   };
 
-  const handleBranchClick = (event, username, repo_name, baseRefName) => {
+  const handleBranchClick = (event, userName, repoName, baseRefName) => {
     event.stopPropagation();
-    const branchUrl = `https://github.com/${username}/${repo_name}/tree/${baseRefName}`;
+    const branchUrl = `https://github.com/${userName}/${repoName}/tree/${baseRefName}`;
     window.open(branchUrl, "_blank");
   };
-  
+
   async function getData() {
-    const response = await AuthService.getCommitsForPullRequest(user, url, repo);
+    const response = await AuthService.getCommitsForPullRequest(
+      user,
+      url,
+      repo
+    );
     response.sort((a, b) => {
       return new Date(b.commit.authoredDate) - new Date(a.commit.authoredDate);
     });
@@ -63,14 +65,15 @@ const CommitPage = () => {
   useEffect(() => {
     if (data && data.newCommit && data.newCommit.commits.nodes) {
       const sortedCommits = [...data.newCommit.commits.nodes].sort((a, b) => {
-        return new Date(b.commit.authoredDate) - new Date(a.commit.authoredDate);
+        return (
+          new Date(b.commit.authoredDate) - new Date(a.commit.authoredDate)
+        );
       });
       setCommits(sortedCommits);
     } else {
       getData();
     }
   }, [data]);
-  
 
   return (
     <div>
@@ -183,7 +186,6 @@ const CommitPage = () => {
                 </a>
               </td>
             </tr>
-
           ))}
         </tbody>
       </Table>
