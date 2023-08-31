@@ -124,7 +124,7 @@ const GitHubWorkflowPage = () => {
         <CDBSidebar
           textColor="white"
           backgroundColor="black"
-          style={{ flex: "0 0 auto", height: "auto" }}
+          style={{ flex: "0 0 auto", height: "100vh" }}
         >
           <CDBSidebarHeader prefix={<i className="fa fa-bars fa-large"></i>}>
             <a
