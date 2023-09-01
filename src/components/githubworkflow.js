@@ -16,7 +16,7 @@ import {
   CDBSidebarMenu,
   CDBSidebarMenuItem,
 } from "cdbreact";
-import { Row, Col } from "react-bootstrap";
+import { Row } from "react-bootstrap";
 
 const GitHubWorkflowPage = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -124,7 +124,8 @@ const GitHubWorkflowPage = () => {
         <CDBSidebar
           textColor="white"
           backgroundColor="black"
-          style={{ flex: "0 0 auto", height: "100vh" }}
+          className="position-fixed"
+          style={{ flex: 0,  }}
         >
           <CDBSidebarHeader prefix={<i className="fa fa-bars fa-large"></i>}>
             <a
@@ -142,23 +143,25 @@ const GitHubWorkflowPage = () => {
                 icon="columns"
                 onClick={handleWorkflowRunClick}
                 style={{
-                  color:
-                  showWorkflowRuns === false ? "white" : "yellow",
+                  color: showWorkflowRuns === false ? "white" : "yellow",
                 }}
               >
                 GithubWorkFlow Run
               </CDBSidebarMenuItem>
-              <CDBSidebarMenuItem icon="table" onClick={handleWorkflowJobClick} style={{
-                  color:
-                  showWorkflowJobs === false ? "white" : "yellow",
-                }}>
+              <CDBSidebarMenuItem
+                icon="table"
+                onClick={handleWorkflowJobClick}
+                style={{
+                  color: showWorkflowJobs === false ? "white" : "yellow",
+                }}
+              >
                 GithubWorkFlow Job
               </CDBSidebarMenuItem>
             </CDBSidebarMenu>
           </CDBSidebarContent>
         </CDBSidebar>
 
-        <div style={{ flex: 1, overflow: "auto", padding: "20px" }}>
+        <div style={{ flex: 1, overflow: "auto", padding: "20px", 'margin-left': "250px", }}>
           {showWorkflowRuns && (
             <div>
               <Alert variant="warning">
@@ -214,7 +217,7 @@ const GitHubWorkflowPage = () => {
                                   borderRadius: "5px",
                                 }}
                               >
-                                # {run.id} synchronized by {run.repoOwner}
+                                # {run.id} synchronized by {run.repo_owner}
                               </span>
                             </div>
                           </div>
@@ -422,7 +425,7 @@ const GitHubWorkflowPage = () => {
                                     borderRadius: "5px",
                                   }}
                                 >
-                                  # {job.id} synchronized by {job.repoOwner}
+                                  # {job.id} synchronized by {job.repo_owner}
                                 </span>
                               </div>
                             </div>
@@ -519,4 +522,5 @@ const GitHubWorkflowPage = () => {
     </div>
   );
 };
+
 export default GitHubWorkflowPage;
