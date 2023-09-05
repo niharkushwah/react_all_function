@@ -398,6 +398,21 @@ export const GET_WORKFLOW_JOB = gql`
   }
 `;
 
+export const onetimeplan = async (productId) => {
+  try {
+    const response = await axios.post(API_URL, {
+      query: `
+        mutation{
+          onetimeplan(productId:"${productId}")
+        }
+      `,
+    });
+    return response.data.data.onetimeplan;
+  } catch (error) {
+    throw new Error("Failed to create onetimeplan");
+  }
+};
+
 const AuthService = {
   signup,
   checkEmail,
